@@ -344,7 +344,7 @@ public class DrawSimulationApplet2D extends JApplet
         // System.out.println("DRAW CELLS");
         for (cellNum = 0; cellNum < totalNormalCells; ++cellNum) {
             cell1 = cs.getNormalCell(cellNum);
-            System.out.println("DRAW CELL NUMBER " + cell1.getCellNumber());
+            // System.out.println("DRAW CELL NUMBER " + cell1.getCellNumber());
             x1 = cell1.getCoordX();
             y1 = cell1.getCoordY();
             g2d.setColor(Color.black);
@@ -435,14 +435,14 @@ public class DrawSimulationApplet2D extends JApplet
                        g2d.setStroke(new BasicStroke(10));
                        g2d.drawLine((int) (-(CellSimulation.ELLIPSE_MAJOR/2)*getScaleX()),0,0,0);
                        g2d.setStroke(sTemp);
-                       System.out.println("DREW THE LINE");
-                       System.out.println("DRAW CELL COORDS " + x0 + " " + y0);
-                       System.out.println("TEST ANGLE " + tempCell.getMangle());
-                       System.out.println("ATTRACT DRAW " + cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " " + tempCell.getCoordX() + " " + tempCell.getCoordY() + " " + tempCell.getCoordZ());
+                       // System.out.println("DREW THE LINE");
+                       // System.out.println("DRAW CELL COORDS " + x0 + " " + y0);
+                       // System.out.println("TEST ANGLE " + tempCell.getMangle());
+                       // System.out.println("ATTRACT DRAW " + cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " " + tempCell.getCoordX() + " " + tempCell.getCoordY() + " " + tempCell.getCoordZ());
                        g2d.translate(tempCell.getCoordX()*getScaleX(), -tempCell.getCoordY()*getScaleY());
                        g2d.rotate((tempCell.getMangle()-90)*DTR);
-                       System.out.println("DRAW SIMULATION TEST NUM " + cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
-                       System.out.println("DRAW SIMULATION MANGLE " + tempCell.getMangle());
+                       // System.out.println("DRAW SIMULATION TEST NUM " + cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
+                       // System.out.println("DRAW SIMULATION MANGLE " + tempCell.getMangle());
 //                       g2d.drawLine((int) ((CellSimulation.ELLIPSE_MAJOR/2)*getScaleX()),0,0,0);
 //                     g2d.drawLine((int) (-(CellSimulation.ELLIPSE_MAJOR/2)*getScaleX()),0,0,0);
                     }
@@ -538,7 +538,7 @@ public class DrawSimulationApplet2D extends JApplet
             yTrack2 = tr2.getY();
             dist1 = getDist2(xTrack1, yTrack1, xBall, yBall);
             dist2 = getDist2(xTrack2, yTrack2, xBall, yBall);
-            System.out.println("GOOD MOVE " + dist1 + " " + dist2 + " " + BALL_RADIUS2);
+            // System.out.println("GOOD MOVE " + dist1 + " " + dist2 + " " + BALL_RADIUS2);
             if (dist1 < BALL_RADIUS2 || dist2 < BALL_RADIUS2)
                 return  (false);
         }
@@ -638,7 +638,7 @@ public class DrawSimulationApplet2D extends JApplet
                         break;
                     }
                   }
-                  System.out.println("CENTER AROUND CELL " + Integer.valueOf(normalField.getText()));
+                  // System.out.println("CENTER AROUND CELL " + Integer.valueOf(normalField.getText()));
                   if(foundCellNum >= 0) 
                   {
                      setXcenter(cell1.getCoordX());

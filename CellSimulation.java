@@ -461,14 +461,14 @@ public class CellSimulation {
         int j;
         Cell cell;
 
-        for (j = 0; j < getNormalCellTotal(); ++j) {
-            System.out.println((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(j));
-        }
+        // for (j = 0; j < getNormalCellTotal(); ++j) {
+          //   System.out.println((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(j));
+        // }
     }
 
     /** add a cell to the appropriate cell vector **/
     private void growCell(Cell cell) {
-        System.out.println("ADD CELL NO " + cell.getCellNumber());
+        // System.out.println("ADD CELL NO " + cell.getCellNumber());
         AllCells[cell.getType().ordinal()].addElement(cell);
         return;
     }
@@ -534,13 +534,13 @@ public class CellSimulation {
         /* first normal cell */
         if (oldCell.getLinkCellDown() == null) {
             if (first == false) {
-                System.out.println("RETURN oldCell.getLinkCellDown() == null");
+                // System.out.println("RETURN oldCell.getLinkCellDown() == null");
                 return;
             }
 
             if (oldCell.getSubType() == SubTypes.INTERMEDIATE) {
                 newCell.setCellCount(newCell.getCellCount() - 1);
-                System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
+                // System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
 
                 return;
             }
@@ -551,12 +551,12 @@ public class CellSimulation {
             /* all other normal cells */
         } else {
             if (cellGrowthCount <= 1) {
-                System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
+                // System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
                 return;
             }
 
             if (getNumCellsToMain(oldCell) > MAX_NUM_CELLS_BRANCH) {
-                System.out.println("RETURN getNumCellsToMain(oldCell)");
+                // System.out.println("RETURN getNumCellsToMain(oldCell)");
                 return;
             }
 
@@ -622,25 +622,25 @@ public class CellSimulation {
                 switch (icount) {
                 case 0:
                     ranAngle = -getSpreadAngle() / 2.;
-                    System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
                     newCell.setSubType(SubTypes.MAIN_L);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
 
                     break;
 
                 case 1:
                     ranAngle = getSpreadAngle() / 2.;
-                    System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
                     newCell.setSubType(SubTypes.MAIN_R);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
 
                     break;
 
                 case 2:
                     ranAngle = 0.;
-                    System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
                     newCell.setSubType(SubTypes.MAIN_C);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
 
                     break;
                 }
@@ -649,32 +649,32 @@ public class CellSimulation {
                 (oldCell.getSubType() == SubTypes.MAIN_C)) {
                 // System.out.println("MAIN SWITCH");
                 if (oldCell.getSubType() == SubTypes.MAIN_R) {
-                    System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
                     newCell.setSubType(SubTypes.MAIN_R);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
                 } else if (oldCell.getSubType() == SubTypes.MAIN_L) {
-                    System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
                     newCell.setSubType(SubTypes.MAIN_L);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
                 } else if (oldCell.getSubType() == SubTypes.MAIN_C) {
-                    System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
                     newCell.setSubType(SubTypes.MAIN_C);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
                 }
 
-                System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
+                // System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
                 oldCell.setSubType(SubTypes.MAIN);
-                System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
+                // System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
             } else if (oldCell.getSubType() != SubTypes.MAIN && oldCell.getSubType() != SubTypes.MAIN_L && oldCell.getSubType() != SubTypes.MAIN_R && oldCell.getSubType() != SubTypes.MAIN_C) {
                 if ((oldCell.getGrowthCount() >= getMaxIntermediateBranch()) &&
                     (cellGrowthCount >= 2)) {
-                    System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
+                    // System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
                     oldCell.setSubType(SubTypes.NORMAL);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
                 } else if (oldCell.getSubType() != SubTypes.INTERMEDIATE) {
-                    System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
+                    // System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
                     oldCell.setSubType(SubTypes.INTERMEDIATE);
-                    System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
+                    // System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
                 }
             }
 
@@ -783,7 +783,7 @@ public class CellSimulation {
             dist2 = Math.sqrt((dx * dx) + (dy * dy));
 
             if (dist2 > dist1) {
-                System.out.println("CELL " + newCell.getCellNumber() + " OUT OF BOUNDS");
+                // System.out.println("CELL " + newCell.getCellNumber() + " OUT OF BOUNDS");
                 return;
             }
         }
@@ -827,7 +827,9 @@ public class CellSimulation {
         double dyp;
         double dzp;
         double distTemp;
+        double distTempNP;
         double alignAngle;
+        double minsin,mincos;
         double ranAngle;
         double[] coords = new double[3];
         double[] coordsdown = new double[3];
@@ -875,6 +877,7 @@ public class CellSimulation {
                 dist = 100000.;
 
                 if (lastNum != 0) {
+                    System.out.println("ITER NO " + iter);
                     for (j = 0; j < lastNum; ++j) {
                         tempCell = getLastCell(j);
                         mAttract = false;
@@ -893,20 +896,46 @@ public class CellSimulation {
 
                         x2 = tempCell.getCoordX();
                         y2 = tempCell.getCoordY();
+   
+        
+                        mincos = 0;
+                        minsin = 0;
+                        
+                        if (mAttract == true) {
+                            mincos = Math.cos(tempCell.getMangle());
+                            minsin = Math.sin(tempCell.getMangle());
 
+                        }
 
+                        dx = (x1 - refCoords[0]*minsin) - x2;
+                        dy = (y1 - refCoords[1]*mincos) - y2;
 
-                        dx = x2 - x1;
-                        dy = y2 - y1;
+                        distTempNP = Math.sqrt((dx * dx) + (dy * dy));
+
                         dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
                             didTransform);
-
-
-
                         dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
                             didTransform);
 
                         distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
+       
+                        if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 43 )
+                        {
+                            System.out.println("#######     MCELL 43 COORDINATES "  + mCell.getCoordX() + " " + mCell.getCoordY());
+                            System.out.println("#######     DX " + dx + " DY " + dy); 
+                            System.out.println("#######     DXP " + dxp + " DYP " + dyp); 
+                            if (tempCell.getType() == Types.NORMAL)
+                            {
+                                System.out.println("#######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
+                                System.out.println("#######     DISTANCE OF MCELL 43 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
+                            }
+                            else
+                            {
+                                System.out.println("#######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
+                                System.out.println("######       DISTANCE OF MCELL 43 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
+                            }
+                            System.out.println();
+                         }
 
                         /*  if distance between metanephric cell and LAST cell or a bound metanephric cell */
                         /*  is small enough, dock it */
@@ -933,6 +962,13 @@ public class CellSimulation {
                                 System.err.println("Error wrong type of cell");
                                 System.exit(-1);
                             }
+
+                            
+                            coords[0] = dx;
+                            coords[1] = dy;
+                            coords[2] = 0.;
+                            mCell.setCoords(Transform.translate(mCell.getCoords(),coords));
+                            
                             mCell.setDock(tempCell.getCoordX(), tempCell.getCoordX(), 0);
 
                             if (tempCell.getType() == Types.NORMAL)
@@ -975,8 +1011,7 @@ public class CellSimulation {
 
                             break;
                         }
-
-                        if (distTemp < dist) {
+                        else if (distTemp < dist) {
                             dist = distTemp;
                             xmin = x2;
                             ymin = y2;
@@ -989,17 +1024,16 @@ public class CellSimulation {
                     if ((dist < 100000.) &&
                         (metanephric_attract_moves < MAX_METANEPHRIC_ATTRACT_MOVES) && !bound) {
 
-                        rCoords1[0] = 0;
-                        rCoords1[1] = 0;
-                        rCoords2[0] = 0;
-                        rCoords2[1] = 0;
+                        minsin = 0;
+                        mincos = 0;
                         if (mAttract == true) {
-                            rCoords1 = Transform.rotateZ(-tempMinCell.getMangle() * DTR, refCoords);
-                            rCoords2 = Transform.rotateZ(mCell.getMangle() * DTR, refCoords);
+                            mincos = Math.cos(tempMinCell.getMangle());
+                            minsin = Math.sin(tempMinCell.getMangle());
 
                         }
-                        dx = xmin - rCoords1[0] - (x1 + rCoords2[0]);
-                        dy = ymin - rCoords1[1] - (y1 + rCoords2[1]);
+                        dx = xmin - refCoords[0]*minsin - x1;
+                        dy = ymin - refCoords[1]*mincos - y1;
+
 
                         /* take into account peridic boundary conditions */
 
@@ -1032,14 +1066,14 @@ public class CellSimulation {
 
                         if (mAttract) {
                             mCell.setTestCell(tempMinCell);
-                            System.out.println("\nCOORD TEMP_MIN_CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
-                            System.out.println("COORD ATTRACTING " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell));
-                            System.out.println("COORDS ANGLE " + mCell.getMangle());
-                            System.out.println("ATTRACT TOWARDS DOCKED CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
+                            // System.out.println("\nCOORD TEMP_MIN_CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
+                            // System.out.println("COORD ATTRACTING " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell));
+                            // System.out.println("COORDS ANGLE " + mCell.getMangle());
+                            // System.out.println("ATTRACT TOWARDS DOCKED CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
 
-                            System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS DOCKED MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
+                            // System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS DOCKED MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
                         } else
-                            System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS LAST CELL " + tempMinCell.getCellNumber());
+                            // System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS LAST CELL " + tempMinCell.getCellNumber());
                         if (didTransform.tf) {
                             if (mCell.getPeriodicType() == PeriodicType.NORMAL) {
                                 mCell.setPeriodicType(PeriodicType.CROSSED);
@@ -1126,7 +1160,7 @@ public class CellSimulation {
             }
         }
 
-        System.out.println("CURRENTITER " + currentIter);
+        // System.out.println("CURRENTITER " + currentIter);
 
         /* move metanephric cells */
         if (currentIter > START_METANEPHRIC_CELLS) {
@@ -1151,7 +1185,7 @@ public class CellSimulation {
         int direction;
         int i;
         int j;
-        System.out.println(" ALGORITHM ITER " + cellGrowthCount + " CELL NUMBER " + cell.getCellNumber());
+        // System.out.println(" ALGORITHM ITER " + cellGrowthCount + " CELL NUMBER " + cell.getCellNumber());
 
         switch (cell.getSubType()) {
         case NORMAL:

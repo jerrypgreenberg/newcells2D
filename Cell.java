@@ -74,7 +74,7 @@ public class Cell {
         setCellNumber(getCellCount());
         setPeriodicType(PeriodicType.NORMAL);
         setAddedType(AddedType.NORMAL);
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     /** this constructor is used **/
     public Cell(double x, double y, double z, SubTypes stype) {
@@ -85,7 +85,7 @@ public class Cell {
         setCellNumber(getCellCount());
         setPeriodicType(PeriodicType.NORMAL);
         setAddedType(AddedType.NORMAL);
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     public Cell(double coor[], Cell down, Cell[] up) {
         setCoords(coor);
@@ -97,7 +97,7 @@ public class Cell {
         setCellNumber(getCellCount());
         setPeriodicType(PeriodicType.NORMAL);
         setAddedType(AddedType.NORMAL);
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     public Cell(double coor[], SubTypes stype, Cell down, Cell[] up) {
         setCoords(coor);
@@ -109,7 +109,7 @@ public class Cell {
         setCellNumber(getCellCount());
         setPeriodicType(PeriodicType.NORMAL);
         setAddedType(AddedType.NORMAL);
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     /** this constuctor is used **/
     public Cell(double x, double y, double z, Types type, SubTypes stype) {
@@ -119,7 +119,7 @@ public class Cell {
         setCellCount(getCellCount() + 1);
         setCellNumber(getCellCount());
         setPeriodicType(PeriodicType.NORMAL);
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     public Cell(double coor[], Cell down, Cell[] up, Types type, SubTypes stype) {
         setCoords(coor);
@@ -131,7 +131,7 @@ public class Cell {
         setCellNumber(getCellCount());
         setPeriodicType(PeriodicType.NORMAL);
         setAddedType(AddedType.NORMAL);
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     public Cell(Cell cell, SubTypes stype) {
         if (cell == null) {
@@ -143,7 +143,7 @@ public class Cell {
         setSubType(stype);
         setCellCount(getCellCount() + 1);
         setCellNumber(getCellCount());
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     /** this constructor is used **/
     public Cell(Cell cell, SubTypes stype, Cell down) {
@@ -157,7 +157,7 @@ public class Cell {
         setSubType(stype);
         setCellCount(getCellCount() + 1);
         setCellNumber(getCellCount());
-        System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
+        // System.out.println("CELL NUMBER " + getCellNumber() + " CELL TYPE " + getType() + " CELL SUBTYPE " + getSubType());
     }
     /** set cell coordinates given an array **/
     public void setCoords(double[] coor) {
