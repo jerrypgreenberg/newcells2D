@@ -829,7 +829,8 @@ public class CellSimulation {
         double distTemp;
         double distTempNP;
         double alignAngle;
-        double minsin,mincos;
+        double minsin1,mincos1;
+        double minsin2,mincos2;
         double ranAngle;
         double[] coords = new double[3];
         double[] coordsdown = new double[3];
@@ -898,17 +899,27 @@ public class CellSimulation {
                         y2 = tempCell.getCoordY();
    
         
-                        mincos = 0;
-                        minsin = 0;
+                        mincos2 = 0;
+                        minsin2 = 0;
                         
                         if (mAttract == true) {
-                            mincos = Math.cos(tempCell.getMangle());
-                            minsin = Math.sin(tempCell.getMangle());
+                            mincos2 = Math.cos(tempCell.getMangle());
+                            minsin2 = Math.sin(tempCell.getMangle());
 
                         }
 
-                        dx = (x1 - refCoords[0]*minsin) - x2;
-                        dy = (y1 - refCoords[1]*mincos) - y2;
+                        dx = (x2 - refCoords[0]*minsin2) - x1;
+                        dy = (y2 - refCoords[1]*mincos2) - y1;
+
+                        
+                        if (mAttract == true) {
+                            mincos1 = Math.cos(mCell.getMangle());
+                            minsin1 = Math.sin(mCell.getMangle());
+                        }
+
+                        dx -=  refCoords[0]*minsin1;
+                        dy -=  refCoords[1]*mincos1;
+
 
                         distTempNP = Math.sqrt((dx * dx) + (dy * dy));
 
@@ -929,7 +940,7 @@ public class CellSimulation {
                                 System.out.println("#######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
                                 System.out.println("#######     DISTANCE OF MCELL 43 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
                             }
-                            else
+                            lse
                             {
                                 System.out.println("#######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
                                 System.out.println("######       DISTANCE OF MCELL 43 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
@@ -1024,15 +1035,15 @@ public class CellSimulation {
                     if ((dist < 100000.) &&
                         (metanephric_attract_moves < MAX_METANEPHRIC_ATTRACT_MOVES) && !bound) {
 
-                        minsin = 0;
-                        mincos = 0;
+                        minsin2 = 0;
+                        mincos2 = 0;
                         if (mAttract == true) {
-                            mincos = Math.cos(tempMinCell.getMangle());
-                            minsin = Math.sin(tempMinCell.getMangle());
+                            mincos2 = Math.cos(tempMinCell.getMangle());
+                            minsin2 = Math.sin(tempMinCell.getMangle());
 
                         }
-                        dx = xmin - refCoords[0]*minsin - x1;
-                        dy = ymin - refCoords[1]*mincos - y1;
+                        dx = xmin - refCoords[0]*minsin2 - x1;
+                        dy = ymin - refCoords[1]*mincos2 - y1;
 
 
                         /* take into account peridic boundary conditions */
