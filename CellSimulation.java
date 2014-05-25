@@ -912,10 +912,8 @@ public class CellSimulation {
                         dy = (y2 - refCoords[1]*mincos2) - y1;
 
                         
-                        if (mAttract == true) {
-                            mincos1 = Math.cos(mCell.getMangle());
-                            minsin1 = Math.sin(mCell.getMangle());
-                        }
+                        mincos1 = Math.cos(mCell.getMangle());
+                        minsin1 = Math.sin(mCell.getMangle());
 
                         dx -=  refCoords[0]*minsin1;
                         dy -=  refCoords[1]*mincos1;
@@ -940,7 +938,7 @@ public class CellSimulation {
                                 System.out.println("#######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
                                 System.out.println("#######     DISTANCE OF MCELL 43 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
                             }
-                            lse
+                            else
                             {
                                 System.out.println("#######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
                                 System.out.println("######       DISTANCE OF MCELL 43 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
