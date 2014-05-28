@@ -903,8 +903,8 @@ public class CellSimulation {
                         minsin2 = 0;
                         
                         if (mAttract == true) {
-                            mincos2 = Math.cos(tempCell.getMangle());
-                            minsin2 = Math.sin(tempCell.getMangle());
+                            mincos2 = Math.cos(tempCell.getMangle()*DTR);
+                            minsin2 = Math.sin(tempCell.getMangle()*DTR);
 
                         }
 
@@ -912,11 +912,11 @@ public class CellSimulation {
                         dy = (y2 - refCoords[1]*mincos2) - y1;
 
                         
-                        mincos1 = Math.cos(mCell.getMangle());
-                        minsin1 = Math.sin(mCell.getMangle());
+                        mincos1 = Math.cos(mCell.getMangle()*DTR);
+                        minsin1 = Math.sin(mCell.getMangle()*DTR);
 
-                        dx -=  refCoords[0]*minsin1;
-                        dy -=  refCoords[1]*mincos1;
+                        dx +=  refCoords[0]*minsin1;
+                        dy +=  refCoords[1]*mincos1;
 
 
                         distTempNP = Math.sqrt((dx * dx) + (dy * dy));
@@ -928,28 +928,35 @@ public class CellSimulation {
 
                         distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
        
-                        if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 43 )
-                        {
-                            System.out.println("#######     MCELL 43 COORDINATES "  + mCell.getCoordX() + " " + mCell.getCoordY());
-                            System.out.println("#######     DX " + dx + " DY " + dy); 
-                            System.out.println("#######     DXP " + dxp + " DYP " + dyp); 
-                            if (tempCell.getType() == Types.NORMAL)
-                            {
-                                System.out.println("#######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
-                                System.out.println("#######     DISTANCE OF MCELL 43 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
-                            }
-                            else
-                            {
-                                System.out.println("#######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
-                                System.out.println("######       DISTANCE OF MCELL 43 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
-                            }
-                            System.out.println();
-                         }
 
                         /*  if distance between metanephric cell and LAST cell or a bound metanephric cell */
                         /*  is small enough, dock it */
 
+                        
+                        if ( (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) && (tempCell.getCellNumber() == 87)) {
+                            System.out.println("DOCK DISTANCE 41 FROM 87 " + distTemp);                             
+                        }
                         if (distTemp < DOCKING_DISTANCE) {
+                        if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
+                        {
+                            System.out.println("MINCOS1 " + mincos1 + " MINSIN1 " + minsin1);
+                            System.out.println("MINCOS2 " + mincos2 + " MINSIN2 " + minsin2);
+                            System.out.println("#######     MCELL 41 COORDINATES "  + mCell.getCoordX() + " " + mCell.getCoordY());
+                            System.out.println("#######     DX " + dx + " DY " + dy); 
+                            System.out.println("#######     DXP " + dxp + " DYP " + dyp); 
+                            System.out.println("#######    ALIGN ANGLE " + mCell.getMangle()); 
+                            if (tempCell.getType() == Types.NORMAL)
+                            {
+                                System.out.println("#######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
+                                System.out.println("#######     DISTANCE OF MCELL 41 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
+                            }
+                            else
+                            {
+                                System.out.println("#######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
+                                System.out.println("######       DISTANCE OF MCELL 41 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
+                            }
+                            System.out.println();
+                         }
                             mCell.setSubType(SubTypes.LAST);
 
                             /* bound to a LAST cell */
@@ -1036,8 +1043,8 @@ public class CellSimulation {
                         minsin2 = 0;
                         mincos2 = 0;
                         if (mAttract == true) {
-                            mincos2 = Math.cos(tempMinCell.getMangle());
-                            minsin2 = Math.sin(tempMinCell.getMangle());
+                            mincos2 = Math.cos(tempMinCell.getMangle()*DTR);
+                            minsin2 = Math.sin(tempMinCell.getMangle()*DTR);
 
                         }
                         dx = xmin - refCoords[0]*minsin2 - x1;

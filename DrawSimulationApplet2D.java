@@ -49,8 +49,8 @@ public class DrawSimulationApplet2D extends JApplet
     private static final int CIRCLE_WIDTH = 10;
     private static final int VERY_LITTLE_ELLIPSE_MAJOR = 10;
     private static final int VERY_LITTLE_ELLIPSE_MINOR = 3;
-    private static final int LITTLE_ELLIPSE_MAJOR = 10;
-    private static final int LITTLE_ELLIPSE_MINOR = 3;
+    private static final double  LITTLE_ELLIPSE_MAJOR = .1;
+    private static final double  LITTLE_ELLIPSE_MINOR = .035;
     private static final int LITTLE_CIRCLE_WIDTH = 3;
     private static final double BALL_RADIUS = 0.2;
     private static final double BALL_RADIUS2 = BALL_RADIUS*BALL_RADIUS;
@@ -227,7 +227,7 @@ public class DrawSimulationApplet2D extends JApplet
         littleCircle = new Ellipse2D.Double(0, 0, CellSimulation.ELLIPSE_MAJOR, CellSimulation.ELLIPSE_MINOR);
         veryLittleCircle = new Ellipse2D.Double(0, 0, VERY_LITTLE_ELLIPSE_MAJOR, VERY_LITTLE_ELLIPSE_MINOR);
         ellipse = new Ellipse2D.Double(0, 0, CellSimulation.ELLIPSE_MAJOR*getScaleX(), CellSimulation.ELLIPSE_MINOR*getScaleY());
-        littleEllipse = new Ellipse2D.Double(0, 0, LITTLE_ELLIPSE_MAJOR, LITTLE_ELLIPSE_MINOR);
+        littleEllipse = new Ellipse2D.Double(0, 0, LITTLE_ELLIPSE_MAJOR*getScaleX(), LITTLE_ELLIPSE_MINOR*getScaleY());
         setXcenter(0.);
         setYcenter(0.);
     }
@@ -396,10 +396,9 @@ public class DrawSimulationApplet2D extends JApplet
         if(count >= CellSimulation.START_METANEPHRIC_CELLS)
         {
            // System.out.println("COUNT " + count);
-           for (cellNum = 0; cellNum < cs.getMetanephricCellTotal(); ++cellNum) {
+          for (cellNum = 0; cellNum < cs.getMetanephricCellTotal(); ++cellNum) {
                 g2d.setColor(Color.blue);
                 cell1 = cs.getMetanephricCell(cellNum);
-                tempCell = cell1.getTestCell();
                 // System.out.println("DRAW METANEPHRIC CELL " + cell1);
                 x0 = cell1.getCoordX();
                 y0 = cell1.getCoordY();
@@ -411,51 +410,26 @@ public class DrawSimulationApplet2D extends JApplet
                 g2d.setColor(Color.red);
                 if(cell1.getPeriodicType() == PeriodicType.CROSSED)
                     g2d.setColor(Color.black);
-                 if(cell1.getSubType() == SubTypes.LAST)
+                if(cell1.getSubType() == SubTypes.LAST)
                     g2d.setColor(Color.gray);
-                 if(cell1.getBoundCell() != null)
+                if(cell1.getBoundCell() != null)
                    if(cell1.getBoundCell().getNumberOfAttractCells() >= CellSimulation.MAX_ATTRACT)
                        g2d.setColor(Color.blue);
-                 // g2d.fill(circle);
-                //     if(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1) == 71 || cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1) == 52 || cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1) == 8)
-                  //   {
                  if(ellipses) 
                  {
+                    g2d.drawString(Integer.toString(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1)),0,0);
                     g2d.rotate((cell1.getMangle() - 90)*DTR);
                     g2d.translate(- (CellSimulation.ELLIPSE_MAJOR/2)*getScaleX(), - (CellSimulation.ELLIPSE_MINOR/2)*getScaleY());
                     g2d.fill(ellipse);
-                    // if ( cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1) == 71 ) {
-                    if(tempCell != null ) 
-                    {
-                       g2d.setColor(Color.green);
-                       g2d.setTransform(new AffineTransform());
-                       g2d.translate(XMIDDLE, YDISPLAY);
-                       g2d.translate(-getXdisp()*getScaleX(),getYdisp()*getScaleY());
-                       Stroke sTemp = g2d.getStroke();
-                       g2d.setStroke(new BasicStroke(10));
-                       g2d.drawLine((int) (-(CellSimulation.ELLIPSE_MAJOR/2)*getScaleX()),0,0,0);
-                       g2d.setStroke(sTemp);
-                       // System.out.println("DREW THE LINE");
-                       // System.out.println("DRAW CELL COORDS " + x0 + " " + y0);
-                       // System.out.println("TEST ANGLE " + tempCell.getMangle());
-                       // System.out.println("ATTRACT DRAW " + cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " " + tempCell.getCoordX() + " " + tempCell.getCoordY() + " " + tempCell.getCoordZ());
-                       g2d.translate(tempCell.getCoordX()*getScaleX(), -tempCell.getCoordY()*getScaleY());
-                       g2d.rotate((tempCell.getMangle()-90)*DTR);
-                       // System.out.println("DRAW SIMULATION TEST NUM " + cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
-                       // System.out.println("DRAW SIMULATION MANGLE " + tempCell.getMangle());
-//                       g2d.drawLine((int) ((CellSimulation.ELLIPSE_MAJOR/2)*getScaleX()),0,0,0);
-//                     g2d.drawLine((int) (-(CellSimulation.ELLIPSE_MAJOR/2)*getScaleX()),0,0,0);
-                    }
+                 }
+                 else
+                 {
+                   g2d.drawString(Integer.toString(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1)),0,0);
+                   g2d.rotate((cell1.getMangle() - 90)*DTR);
+                   g2d.translate(- (LITTLE_ELLIPSE_MAJOR/2)*getScaleX(), - (LITTLE_ELLIPSE_MINOR/2)*getScaleY());
+                   g2d.fill(littleEllipse);
                 }
-                else
-                {
-                g2d.drawString(Integer.toString(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1)),0,0);
-                g2d.rotate((cell1.getMangle() - 90)*DTR);
-                g2d.translate(- LITTLE_ELLIPSE_MAJOR/2, - LITTLE_ELLIPSE_MINOR/2);
-                g2d.fill(littleEllipse);
-               }
-             //}
-           }
+          }
         }
     }
 
@@ -558,6 +532,7 @@ public class DrawSimulationApplet2D extends JApplet
         int foundCellNum;
         int totalNormalCells;
         int totalMetanephricCells;
+        System.out.println("COMMAND " + e.getActionCommand());
         if (e.getActionCommand().compareTo("ADVANCE") == 0) {
             ++count;
 //                 if (count < getIter()) {
@@ -567,6 +542,8 @@ public class DrawSimulationApplet2D extends JApplet
         } 
         else if (e.getActionCommand().compareTo("REWIND") == 0) {
             count = 0;
+            ellipses = false;
+            metanephricButton.setText("ELLIPSES");
             Cell.setCellCount(0);
             CellSimulation.updateCount = 0;
             setupSimulation(seed);
