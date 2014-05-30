@@ -7,717 +7,717 @@ import java.util.*;
 
 /** Simulation Class **/
 public class CellSimulation {
-    /** degrees to radians **/
-    public static double TOL = 0.00001;
-    public static final double ELLIPSE_MAJOR = .2;
-    public static final double ELLIPSE_MINOR = .07;
-    public static final double DTR = Math.PI / 180.;
-    /** cell types : normal, metanephric, attractive **/
-    private static final int CELL_TYPES = 3;
-    /**  number of static attractive cells **/
-    private static final int NUM_ATTRACTIVE_CELLS = 10;
-    /** create metanephric cells at this iteration (iters start at 0) **/
-    public static final int START_METANEPHRIC_CELLS = 1;
-    /** number of metanephric cells created **/
-    public static final int NUM_METANEPHRIC_CELLS = 50;
-    /** maximum number of cells from main branch **/
-    public static final int MAX_NUM_CELLS_BRANCH = 8;
-    /** distance from old cell to new cell  **/
-    public static final double BRANCH_STEP_LENGTH = 1.;
-    /** maximum number of metanephric cell updates **/
-    private static final int MAX_METANEPHRIC_ATTRACT_MOVES = 60;
-    /** maximum number of attractive cells that are actually used **/
-    public static final int MAX_ATTRACT = 10;
-    /** max x coordinate **/
-    public static double rightLimit;
-    /** min x coordinate **/
-    public static double leftLimit;
-    /** max y coordinate **/
-    public static double upperLimit;
-    /** min y coordinate **/
-    public static double lowerLimit;
-    /** origin coordinates **/
-    private static final double[] ZERO_COORDS = {
-        0., 0., 0.
-    };
-    /** number of metanephric cellls **/
-    public static int updateCount = 0;
-    /** main branch step length **/
-    private double stepLength;
-    /** branch step length **/
-    private double branchStepLength;
-    /** current iteration count **/
-    private int iter;
-    /** controls sign for left-right initial branch **/
-    private double angleMainSign = 1.;
-    /** alternate angle signs **/
-    private double angleSign = 1.;
-    /** perpendicualar sign for "LAST" cells **/
-    private double perpAngleSign = 1.;
-    /** seed for random number generation **/
-    private long randomSeed = 101010;
-    /** upper bound on randomly generated angle **/
-    private double maxAngle = 60;
-    /** lower bound on randomly generated angle; **/
-    private double minAngle = 30;
-    /** random number object **/
-    private Random random;
-    /** maximum branching off main segments **/
-    private int maxBranch;
-    /** maximum branching off non-main segments **/
-    private int maxIntermediateBranch;
-    /** if a metanephric cell is with DOCKING_DISTANCE to a normal cell of type LAST or to another metanephric cell that is already docked (maximum of 2 cells docked to one metanephric cell) it will be docked **/
-    private double DOCKING_DISTANCE = 0.1;
-    /** the angle between the 2 main branchesn **/
-    private double spreadAngle = 120.;
-    /** number of steps to skip between normal cell updates **/
-    private int cellSkip = 4;
-    /** fraction that the length between cells is shortened by each iteration (currently initialized at 1) **/
-    private double fraction;
-    /**  each vector holds references to all cells of a certain type **/
-    public Vector[] AllCells;
-    /** last cell vector **/
-    private Vector lastCells = null;
-    /** keep track of first iteration **/
-    private boolean first = true;
-    /** number of normal cell growth iterations **/
-    private int cellGrowthCount = 0;
-    /** number of metanephric cell growth iterations **/
-    private int metanephric_attract_moves = 0;
-    /** radius of attractive cells **/
-    private double attractiveRadius;
-    /** use periodic cell for metanephric cells **/
-    private static final boolean METANEPHRIC_CELL_PERIODIC = true;
-    /** turn on some extra print's **/
-    boolean debug = false;
-
-    public CellSimulation() {}
-
-    public CellSimulation(Cell cell) {
-        int i;
-        setIter(6);
-        setStepLength(1.);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        setMaxAngle(maxAngle);
-        setMinAngle(minAngle);
-        setSpreadAngle(120);
-        setCellSkip(5);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        random = new Random(getRandomSeed());
-        setFraction(1.);
-        cell.setCellNumber(1);
-        growCell(cell);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.6) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    public CellSimulation(Cell[] cells) {
-        int i;
-        setIter(5);
-        setStepLength(1.);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        setMaxAngle(60);
-        setMinAngle(30);
-        setSpreadAngle(120);
-        setCellSkip(5);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        random = new Random(getRandomSeed());
-        setMaxBranch(3);
-        growCells(cells);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    public CellSimulation(int inIter, double ang, Cell cell) {
-        int i;
-        setIter(inIter);
-        setMaxAngle(60);
-        setMinAngle(30);
-        setStepLength(1.);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        random = new Random(getRandomSeed());
-        setFraction(1.);
-        setMaxBranch(3);
-        setMaxIntermediateBranch(2);
-        setSpreadAngle(120);
-        setCellSkip(5);
-        growCell(cell);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    public CellSimulation(int inIter, double ang, Cell[] cells) {
-        int i;
-        setIter(inIter);
-        setStepLength(1.);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        setMinAngle(30);
-        setMaxAngle(60);
-        setMaxBranch(3);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        random = new Random(getRandomSeed());
-        growCells(cells);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    public CellSimulation(int inIter, double minang, double maxang, Cell cell,
-        long seed, double length, double fraction, int maxB, int intermediate) {
-        int i;
-        setIter(inIter);
-        setStepLength(length);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        setMinAngle(minang);
-        setMaxAngle(maxang);
-        setFraction(fraction);
-        setMaxBranch(maxB);
-        setMaxIntermediateBranch(intermediate);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        setRandomSeed(seed);
-        random = new Random(getRandomSeed());
-        setSpreadAngle(120);
-        setCellSkip(5);
-        growCell(cell);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    /** The constructor currently called by DrawSimulationApplet2D **/
-    public CellSimulation(int inIter, double minang, double maxang, Cell cell,
-        long seed, double length, double fraction, int maxB, int intermediate,
-        double spread, int skip) {
-        int i;
-        setIter(inIter);
-        setStepLength(length);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-
-        // System.out.println("RANDOM ANGLE MIN IN " + minang);
-        // System.out.println("RANDOM ANGLE MAX IN " + maxang);
-        setMinAngle(minang);
-        setMaxAngle(maxang);
-        setFraction(fraction);
-        setMaxBranch(maxB);
-        setMaxIntermediateBranch(intermediate);
-        setSpreadAngle(spread);
-        setCellSkip(skip);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        setRandomSeed(seed);
-        random = new Random(getRandomSeed());
-        growCell(cell);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    public CellSimulation(int inIter, double minang, double maxang, Cell cell,
-        Cell[] cells, long seed, double length, double fraction, int maxB,
-        int intermediate) {
-        int i;
-        setIter(inIter);
-        setStepLength(length);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        setMinAngle(minang);
-        setMaxAngle(maxang);
-        setFraction(fraction);
-        setMaxBranch(maxB);
-        setMaxIntermediateBranch(intermediate);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        setRandomSeed(seed);
-        random = new Random(getRandomSeed());
-        setSpreadAngle(120);
-        setCellSkip(4);
-        growCell(cell);
-        growCells(cells);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    public CellSimulation(int inIter, double minang, double maxang,
-        Cell[] cells, long seed, double length, double fraction) {
-        int i;
-        setIter(inIter);
-        setStepLength(length);
-        setBranchStepLength(BRANCH_STEP_LENGTH);
-        setFraction(fraction);
-        setMinAngle(minang);
-        setMaxAngle(maxang);
-        setSpreadAngle(120);
-        setCellSkip(4);
-        AllCells = new Vector[CELL_TYPES];
-
-        for (i = 0; i < CELL_TYPES; ++i)
-            AllCells[i] = new Vector(0);
-
-        setRandomSeed(seed);
-        random = new Random(getRandomSeed());
-        growCells(cells);
-        attractiveRadius = (0.9 * iter) / getCellSkip();
-        upperLimit = attractiveRadius * 1.1;
-        lowerLimit = 0.0;
-        leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
-        rightLimit = -leftLimit;
-
-        // System.out.println(" Left " + leftLimit + " Right " + rightLimit +
-        //  " Lower " + lowerLimit + " Upper " + upperLimit);
-    }
-
-    /** set the angle between the two main branches **/
-    public void setSpreadAngle(double a) {
-        spreadAngle = a;
-    }
-
-    /** get the angle between the two main branches **/
-    public double getSpreadAngle() {
-        return (spreadAngle);
-    }
-
-    /** set how many steps are between normal cell updates **/
-    public void setCellSkip(int a) {
-        cellSkip = a;
-    }
-
-    /** get how many steps are between normal cell updates **/
-    public int getCellSkip() {
-        return (cellSkip);
-    }
-
-    /** set the maximum random angle **/
-    public void setMaxAngle(double ang) {
-        maxAngle = ang;
-    }
-
-    /** set the minimum random angle **/
-    public void setMinAngle(double ang) {
-        minAngle = ang;
-    }
-
-    /** get the minimum random angle **/
-    public double getMinAngle() {
-        return (minAngle);
-    }
-
-    /** get the maximum random angle **/
-    public double getMaxAngle() {
-        return (maxAngle);
-    }
-
-    /** return a random angle for a cell growing off the main branch, alternating sign **/
-    public double getMainRandomAngle() {
-        if (angleMainSign > 0) {
-            angleMainSign = -1;
-        } else {
-            angleMainSign = 1;
-        }
-
-        return (random.nextDouble() * 30. * angleMainSign);
-    }
-    /** return a random angle with alternating sign: minAngle + (maxAngle - minAngle)*random*sign **/
-    public double getRandomAngle() {
-        double angleDiff = getMaxAngle() - getMinAngle();
-
-        if (angleSign > 0) {
-            angleSign = -1;
-        } else {
-            angleSign = 1;
-        }
-
-        // System.out.println("ATTRACT RAN ANGLE SIGN " + angleSign);
-        return ((getMinAngle() + (angleDiff * random.nextDouble())) * angleSign);
-    }
-
-    /** set the maximum number of cells that can grow from a cell **/
-    public void setMaxBranch(int it) {
-        maxBranch = it;
-    }
-
-    /** get the maximum number of cells that can grow from a cell **/
-    public int getMaxBranch() {
-        return (maxBranch);
-    }
-
-    /** set the total number of iterations **/
-    public void setIter(int it) {
-        iter = it;
-    }
-
-    /** get the total number of iterations **/
-    public int getIter() {
-        return (iter);
-    }
-
-    /** get the maximum distance between a cell and its child **/
-    public double getStepLength() {
-        return (stepLength);
-    }
-
-    /** set the maximum distance between a cell and its child **/
-    public void setStepLength(double s) {
-        stepLength = s;
-    }
-
-    /** get the maximum distance between a cell not on a main branch and its child **/
-    public double getBranchStepLength() {
-        return (branchStepLength);
-    }
-
-    /** set the maximum distance between a cell not on a main branch and its child **/
-    public void setBranchStepLength(double s) {
-        branchStepLength = s;
-    }
-
-    /** return the random seed **/
-    public long getRandomSeed() {
-        return (randomSeed);
-    }
-
-    /** set the random seed **/
-    public void setRandomSeed(long seed) {
-        randomSeed = seed;
-    }
-
-    /** get the value that multiplies the distance between parent and child cells **/
-    public double getFraction() {
-        return (fraction);
-    }
-
-    /** set the value that multiplies the distance between parent and child cells **/
-    public void setFraction(double frac) {
-        fraction = frac;
-    }
-
-    /** print toString() method from Cell class **/
-    private void printSimulationStep() {
-        int i;
-        int j;
-        Cell cell;
-
-        // for (j = 0; j < getNormalCellTotal(); ++j) {
-          //   System.out.println((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(j));
-        // }
-    }
-
-    /** add a cell to the appropriate cell vector **/
-    private void growCell(Cell cell) {
-        // System.out.println("ADD CELL NO " + cell.getCellNumber());
-        AllCells[cell.getType().ordinal()].addElement(cell);
-        return;
-    }
-
-    /** add an array of cells to the appropriate cell vector **/
-    private void growCells(Cell[] cells) {
-        int i;
-        for (i = 0; i < cells.length; ++i)
-            AllCells[cells[0].getType().ordinal()].addElement(cells[i]);
-
-        return;
-    }
-
-    /** calculate coordinates for a new normal cell (newCell) based on the position of the cell it "grew"
-        from (oldCell), attractions and random motion  **/
-
-    private void placeNewCell(Cell oldCell, Cell newCell, int icount) {
-        double dx;
-        double dy;
-        double dz;
-        double dx2;
-        double dy2;
-        double dz2;
-        double x = 0.;
-        double y = 0.;
-        double theta = 0;
-        double tempAngle;
-        double scale;
-        double ranAngle;
-        double alignAngle;
-        double maxDist;
-        double xMin = 0.;
-        double yToXMin = 0.;
-        double dist;
-        double m1;
-        double m2;
-        double dotprod;
-        double xAttr;
-        double yAttr;
-        double dist1;
-        double dist2;
-        Boolean didTransform = new Boolean(false);
-        boolean tooCloseAngle;
-        int noAttrCells;
-        Vector distVec;
-        int i;
-        int j;
-        int jattract = -1;
-        Cell oldOldCell;
-        Cell cellM = null;
-        Cell tempCell;
-        double totalAngle = 0;
-        DistNo tempDistNo;
-        dz = 0.;
-        distVec = new Vector(0);
-
-        // System.out.println("\nOLDCELL " + oldCell);
-        // System.out.println("OLDCELL Type " + oldCell.getSubType());
-        // System.out.println("INITIAL NEW CELL " + newCell);
-        // System.out.println("ITER COUNT  " + cellGrowthCount);
-
-
-        /* first normal cell */
-        if (oldCell.getLinkCellDown() == null) {
-            if (first == false) {
-                // System.out.println("RETURN oldCell.getLinkCellDown() == null");
-                return;
-            }
-
-            if (oldCell.getSubType() == SubTypes.INTERMEDIATE) {
-                newCell.setCellCount(newCell.getCellCount() - 1);
-                // System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
-
-                return;
-            }
-
-            newCell.setCoords(Transform.translate(oldCell.getCoords(), 0.,
-                1. * getStepLength(), 0.));
-            first = false;
-            /* all other normal cells */
-        } else {
-            if (cellGrowthCount <= 1) {
-                // System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
-                return;
-            }
-
-            if (getNumCellsToMain(oldCell) > MAX_NUM_CELLS_BRANCH) {
-                // System.out.println("RETURN getNumCellsToMain(oldCell)");
-                return;
-            }
-
-            // System.out.println("OLD CELL SUB TYPE " + oldCell.getSubType());
-
-            /* oldOldCell is the cell that oldCell grew from */
-            oldOldCell = oldCell.getLinkCellDown();
-
-            /* distance between oldCell and oldOldCell */
-            scale = scaleFactor(oldCell, oldOldCell);
-
-            /* oldCell is on one of the "main" branches, use the current length .
-                The initial orientation of all new cells is x=0, y=getStepLength */
-            if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
-                (oldCell.getSubType() == SubTypes.MAIN_L) ||
-                (oldCell.getSubType() == SubTypes.MAIN_C) ||
-                (cellGrowthCount <= 2)) {
-                newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-                    getStepLength(), 0.));
-            } else if (oldCell.getSubType() == SubTypes.MAIN) {
-                newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-                    getStepLength(), 0.));
-            } else {
-                /* if newCell is a cell of subtype LAST, then make it 25 % the length of other normal cells */
-                if (newCell.getSubType() == SubTypes.LAST) {
-                    newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-                        getBranchStepLength() * 0.25, 0.));
-                } else {
-                    /* if normal cell iteration count is >= 7 cut the distance from oldCell to newCell by 50% */
-                    if (cellGrowthCount >= 7) {
-                        newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-                            getBranchStepLength() * 0.5, 0.));
-                    } else {
-                        newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-                            getBranchStepLength(), 0.));
-                    }
-                }
-            }
-
-            /* vector between new and old cell */
-            dx = ((oldCell.getCoordX() - oldOldCell.getCoordX()) / scale) * getStepLength();
-            dy = ((oldCell.getCoordY() - oldOldCell.getCoordY()) / scale) * getStepLength();
-            dz = ((oldCell.getCoordZ() - oldOldCell.getCoordZ()) / scale) * getStepLength();
-
-            /* angle relative to Y axis of vector defined by oldCell and oldoldCell */
-            theta = getCalculatedAngle(dx, dy);
-
-            if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
-                (oldCell.getSubType() == SubTypes.MAIN_L) ||
-                (oldCell.getSubType() == SubTypes.MAIN_C) ||
-                (oldCell.getSubType() == SubTypes.MAIN)) {
-                /* see the getMainRandomAngle and getRandomAngle methods for a description */
-                ranAngle = getMainRandomAngle();
-            } else {
-                ranAngle = getRandomAngle();
-
-                // System.out.println("RANDOM ANGLE " + ranAngle);
-            }
-
-            /* set the cell SubType */
-            if (cellGrowthCount == 2) {
-                /* for cells # 2 and #3, create two MAIN branches (MAIN_R and MAIN_L) */
-                switch (icount) {
-                case 0:
-                    ranAngle = -getSpreadAngle() / 2.;
-                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
-                    newCell.setSubType(SubTypes.MAIN_L);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
-
-                    break;
-
-                case 1:
-                    ranAngle = getSpreadAngle() / 2.;
-                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
-                    newCell.setSubType(SubTypes.MAIN_R);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
-
-                    break;
-
-                case 2:
-                    ranAngle = 0.;
-                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
-                    newCell.setSubType(SubTypes.MAIN_C);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
-
-                    break;
-                }
-            } else if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
-                (oldCell.getSubType() == SubTypes.MAIN_L) ||
-                (oldCell.getSubType() == SubTypes.MAIN_C)) {
-                // System.out.println("MAIN SWITCH");
-                if (oldCell.getSubType() == SubTypes.MAIN_R) {
-                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
-                    newCell.setSubType(SubTypes.MAIN_R);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
-                } else if (oldCell.getSubType() == SubTypes.MAIN_L) {
-                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
-                    newCell.setSubType(SubTypes.MAIN_L);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
-                } else if (oldCell.getSubType() == SubTypes.MAIN_C) {
-                    // System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
-                    newCell.setSubType(SubTypes.MAIN_C);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
-                }
-
-                // System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
-                oldCell.setSubType(SubTypes.MAIN);
-                // System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
-            } else if (oldCell.getSubType() != SubTypes.MAIN && oldCell.getSubType() != SubTypes.MAIN_L && oldCell.getSubType() != SubTypes.MAIN_R && oldCell.getSubType() != SubTypes.MAIN_C) {
-                if ((oldCell.getGrowthCount() >= getMaxIntermediateBranch()) &&
-                    (cellGrowthCount >= 2)) {
-                    // System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
-                    oldCell.setSubType(SubTypes.NORMAL);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
-                } else if (oldCell.getSubType() != SubTypes.INTERMEDIATE) {
-                    // System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
-                    oldCell.setSubType(SubTypes.INTERMEDIATE);
-                    // System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
-                }
-            }
-
-            /* increment count of cells grown from oldCell */
-            oldCell.setGrowthCount(oldCell.getGrowthCount() + 1);
-
-            // if(getAttractiveCellTotal() > 0 && oldCell.getSubType() == SubTypes.MAIN)
-            jattract = -1;
-
-            /* direct growth towards attractive cells */
-
-            if ((getAttractiveCellTotal() > 0) &&
-                (newCell.getSubType() != SubTypes.LAST)) {
-                x = oldCell.getCoordX();
-                y = oldCell.getCoordY();
-
-                /* distance table  from attactive cell i to normal cell */
-                for (i = 0; i < getAttractiveCellTotal(); ++i) {
-                    cellM = getAttractiveCell(i);
-                    xAttr = cellM.getCoordX();
-                    yAttr = cellM.getCoordY();
-                    dx2 = x - xAttr;
-                    dy2 = y - yAttr;
-                    distVec.addElement(new DistNo(i,
-                        Math.sqrt((dx2 * dx2) + (dy2 * dy2))));
-                }
-
-                sortThem(distVec);
-                /* closest attractive cell */
-                tempDistNo = (DistNo) distVec.elementAt(0);
-                jattract = tempDistNo.getI();
-                xMin = getAttractiveCell(jattract).getCoordX();
-                yToXMin = getAttractiveCell(jattract).getCoordY();
-                dx = xMin - x;
-                dy = yToXMin - y;
-                alignAngle = getCalculatedAngle(dx, dy);
-                alignAngle /= DTR;
-
-                /* rotate towards attractive cell */
-
-                newCell.setCoords(Transform.rotateZ(alignAngle * DTR,
-                    newCell.getCoords()));
-                totalAngle += alignAngle;
+	/** degrees to radians **/
+	public static double TOL = 0.00001;
+	public static final double ELLIPSE_MAJOR = .4;
+	public static final double ELLIPSE_MINOR = .07;
+	public static final double DTR = Math.PI / 180.;
+	/** cell types : normal, metanephric, attractive **/
+	private static final int CELL_TYPES = 3;
+	/**  number of static attractive cells **/
+	private static final int NUM_ATTRACTIVE_CELLS = 10;
+	/** create metanephric cells at this iteration (iters start at 0) **/
+	public static final int START_METANEPHRIC_CELLS = 1;
+	/** number of metanephric cells created **/
+	public static final int NUM_METANEPHRIC_CELLS = 50;
+	/** maximum number of cells from main branch **/
+	public static final int MAX_NUM_CELLS_BRANCH = 8;
+	/** distance from old cell to new cell  **/
+	public static final double BRANCH_STEP_LENGTH = 1.;
+	/** maximum number of metanephric cell updates **/
+	private static final int MAX_METANEPHRIC_ATTRACT_MOVES = 60;
+	/** maximum number of attractive cells that are actually used **/
+	public static final int MAX_ATTRACT = 10;
+	/** max x coordinate **/
+	public static double rightLimit;
+	/** min x coordinate **/
+	public static double leftLimit;
+	/** max y coordinate **/
+	public static double upperLimit;
+	/** min y coordinate **/
+	public static double lowerLimit;
+	/** origin coordinates **/
+	private static final double[] ZERO_COORDS = {
+		0., 0., 0.
+	};
+	/** number of metanephric cellls **/
+	public static int updateCount = 0;
+	/** main branch step length **/
+	private double stepLength;
+	/** branch step length **/
+	private double branchStepLength;
+	/** current iteration count **/
+	private int iter;
+	/** controls sign for left-right initial branch **/
+	private double angleMainSign = 1.;
+	/** alternate angle signs **/
+	private double angleSign = 1.;
+	/** perpendicualar sign for "LAST" cells **/
+	private double perpAngleSign = 1.;
+	/** seed for random number generation **/
+	private long randomSeed = 101010;
+	/** upper bound on randomly generated angle **/
+	private double maxAngle = 60;
+	/** lower bound on randomly generated angle; **/
+	private double minAngle = 30;
+	/** random number object **/
+	private Random random;
+	/** maximum branching off main segments **/
+	private int maxBranch;
+	/** maximum branching off non-main segments **/
+	private int maxIntermediateBranch;
+	/** if a metanephric cell is with DOCKING_DISTANCE to a normal cell of type LAST or to another metanephric cell that is already docked (maximum of 2 cells docked to one metanephric cell) it will be docked **/
+	private double DOCKING_DISTANCE = 0.1;
+	/** the angle between the 2 main branchesn **/
+	private double spreadAngle = 120.;
+	/** number of steps to skip between normal cell updates **/
+	private int cellSkip = 4;
+	/** fraction that the length between cells is shortened by each iteration (currently initialized at 1) **/
+	private double fraction;
+	/**  each vector holds references to all cells of a certain type **/
+	public Vector[] AllCells;
+	/** last cell vector **/
+	private Vector lastCells = null;
+	/** keep track of first iteration **/
+	private boolean first = true;
+	/** number of normal cell growth iterations **/
+	private int cellGrowthCount = 0;
+	/** number of metanephric cell growth iterations **/
+	private int metanephric_attract_moves = 0;
+	/** radius of attractive cells **/
+	private double attractiveRadius;
+	/** use periodic cell for metanephric cells **/
+	private static final boolean METANEPHRIC_CELL_PERIODIC = true;
+	/** turn on some extra print's **/
+	boolean debug = false;
+
+	public CellSimulation() {}
+
+	public CellSimulation(Cell cell) {
+		int i;
+		setIter(6);
+		setStepLength(1.);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		setMaxAngle(maxAngle);
+		setMinAngle(minAngle);
+		setSpreadAngle(120);
+		setCellSkip(5);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		random = new Random(getRandomSeed());
+		setFraction(1.);
+		cell.setCellNumber(1);
+		growCell(cell);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.6) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	public CellSimulation(Cell[] cells) {
+		int i;
+		setIter(5);
+		setStepLength(1.);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		setMaxAngle(60);
+		setMinAngle(30);
+		setSpreadAngle(120);
+		setCellSkip(5);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		random = new Random(getRandomSeed());
+		setMaxBranch(3);
+		growCells(cells);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	public CellSimulation(int inIter, double ang, Cell cell) {
+		int i;
+		setIter(inIter);
+		setMaxAngle(60);
+		setMinAngle(30);
+		setStepLength(1.);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		random = new Random(getRandomSeed());
+		setFraction(1.);
+		setMaxBranch(3);
+		setMaxIntermediateBranch(2);
+		setSpreadAngle(120);
+		setCellSkip(5);
+		growCell(cell);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	public CellSimulation(int inIter, double ang, Cell[] cells) {
+		int i;
+		setIter(inIter);
+		setStepLength(1.);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		setMinAngle(30);
+		setMaxAngle(60);
+		setMaxBranch(3);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		random = new Random(getRandomSeed());
+		growCells(cells);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	public CellSimulation(int inIter, double minang, double maxang, Cell cell,
+			long seed, double length, double fraction, int maxB, int intermediate) {
+		int i;
+		setIter(inIter);
+		setStepLength(length);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		setMinAngle(minang);
+		setMaxAngle(maxang);
+		setFraction(fraction);
+		setMaxBranch(maxB);
+		setMaxIntermediateBranch(intermediate);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		setRandomSeed(seed);
+		random = new Random(getRandomSeed());
+		setSpreadAngle(120);
+		setCellSkip(5);
+		growCell(cell);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	/** The constructor currently called by DrawSimulationApplet2D **/
+	public CellSimulation(int inIter, double minang, double maxang, Cell cell,
+			long seed, double length, double fraction, int maxB, int intermediate,
+			double spread, int skip) {
+		int i;
+		setIter(inIter);
+		setStepLength(length);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+
+		// System.out.println("RANDOM ANGLE MIN IN " + minang);
+		// System.out.println("RANDOM ANGLE MAX IN " + maxang);
+		setMinAngle(minang);
+		setMaxAngle(maxang);
+		setFraction(fraction);
+		setMaxBranch(maxB);
+		setMaxIntermediateBranch(intermediate);
+		setSpreadAngle(spread);
+		setCellSkip(skip);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		setRandomSeed(seed);
+		random = new Random(getRandomSeed());
+		growCell(cell);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	public CellSimulation(int inIter, double minang, double maxang, Cell cell,
+			Cell[] cells, long seed, double length, double fraction, int maxB,
+			int intermediate) {
+		int i;
+		setIter(inIter);
+		setStepLength(length);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		setMinAngle(minang);
+		setMaxAngle(maxang);
+		setFraction(fraction);
+		setMaxBranch(maxB);
+		setMaxIntermediateBranch(intermediate);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		setRandomSeed(seed);
+		random = new Random(getRandomSeed());
+		setSpreadAngle(120);
+		setCellSkip(4);
+		growCell(cell);
+		growCells(cells);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	public CellSimulation(int inIter, double minang, double maxang,
+			Cell[] cells, long seed, double length, double fraction) {
+		int i;
+		setIter(inIter);
+		setStepLength(length);
+		setBranchStepLength(BRANCH_STEP_LENGTH);
+		setFraction(fraction);
+		setMinAngle(minang);
+		setMaxAngle(maxang);
+		setSpreadAngle(120);
+		setCellSkip(4);
+		AllCells = new Vector[CELL_TYPES];
+
+		for (i = 0; i < CELL_TYPES; ++i)
+			AllCells[i] = new Vector(0);
+
+		setRandomSeed(seed);
+		random = new Random(getRandomSeed());
+		growCells(cells);
+		attractiveRadius = (0.9 * iter) / getCellSkip();
+		upperLimit = attractiveRadius * 1.1;
+		lowerLimit = 0.0;
+		leftLimit = (-(upperLimit - lowerLimit) * 1.4) / 2;
+		rightLimit = -leftLimit;
+
+		// System.out.println(" Left " + leftLimit + " Right " + rightLimit +
+		//  " Lower " + lowerLimit + " Upper " + upperLimit);
+	}
+
+	/** set the angle between the two main branches **/
+	public void setSpreadAngle(double a) {
+		spreadAngle = a;
+	}
+
+	/** get the angle between the two main branches **/
+	public double getSpreadAngle() {
+		return (spreadAngle);
+	}
+
+	/** set how many steps are between normal cell updates **/
+	public void setCellSkip(int a) {
+		cellSkip = a;
+	}
+
+	/** get how many steps are between normal cell updates **/
+	public int getCellSkip() {
+		return (cellSkip);
+	}
+
+	/** set the maximum random angle **/
+	public void setMaxAngle(double ang) {
+		maxAngle = ang;
+	}
+
+	/** set the minimum random angle **/
+	public void setMinAngle(double ang) {
+		minAngle = ang;
+	}
+
+	/** get the minimum random angle **/
+	public double getMinAngle() {
+		return (minAngle);
+	}
+
+	/** get the maximum random angle **/
+	public double getMaxAngle() {
+		return (maxAngle);
+	}
+
+	/** return a random angle for a cell growing off the main branch, alternating sign **/
+	public double getMainRandomAngle() {
+		if (angleMainSign > 0) {
+			angleMainSign = -1;
+		} else {
+			angleMainSign = 1;
+		}
+
+		return (random.nextDouble() * 30. * angleMainSign);
+	}
+	/** return a random angle with alternating sign: minAngle + (maxAngle - minAngle)*random*sign **/
+	public double getRandomAngle() {
+		double angleDiff = getMaxAngle() - getMinAngle();
+
+		if (angleSign > 0) {
+			angleSign = -1;
+		} else {
+			angleSign = 1;
+		}
+
+		// System.out.println("ATTRACT RAN ANGLE SIGN " + angleSign);
+		return ((getMinAngle() + (angleDiff * random.nextDouble())) * angleSign);
+	}
+
+	/** set the maximum number of cells that can grow from a cell **/
+	public void setMaxBranch(int it) {
+		maxBranch = it;
+	}
+
+	/** get the maximum number of cells that can grow from a cell **/
+	public int getMaxBranch() {
+		return (maxBranch);
+	}
+
+	/** set the total number of iterations **/
+	public void setIter(int it) {
+		iter = it;
+	}
+
+	/** get the total number of iterations **/
+	public int getIter() {
+		return (iter);
+	}
+
+	/** get the maximum distance between a cell and its child **/
+	public double getStepLength() {
+		return (stepLength);
+	}
+
+	/** set the maximum distance between a cell and its child **/
+	public void setStepLength(double s) {
+		stepLength = s;
+	}
+
+	/** get the maximum distance between a cell not on a main branch and its child **/
+	public double getBranchStepLength() {
+		return (branchStepLength);
+	}
+
+	/** set the maximum distance between a cell not on a main branch and its child **/
+	public void setBranchStepLength(double s) {
+		branchStepLength = s;
+	}
+
+	/** return the random seed **/
+	public long getRandomSeed() {
+		return (randomSeed);
+	}
+
+	/** set the random seed **/
+	public void setRandomSeed(long seed) {
+		randomSeed = seed;
+	}
+
+	/** get the value that multiplies the distance between parent and child cells **/
+	public double getFraction() {
+		return (fraction);
+	}
+
+	/** set the value that multiplies the distance between parent and child cells **/
+	public void setFraction(double frac) {
+		fraction = frac;
+	}
+
+	/** print toString() method from Cell class **/
+	private void printSimulationStep() {
+		int i;
+		int j;
+		Cell cell;
+
+		// for (j = 0; j < getNormalCellTotal(); ++j) {
+		//   System.out.println((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(j));
+		// }
+	}
+
+	/** add a cell to the appropriate cell vector **/
+	private void growCell(Cell cell) {
+		// System.out.println("ADD CELL NO " + cell.getCellNumber());
+		AllCells[cell.getType().ordinal()].addElement(cell);
+		return;
+	}
+
+	/** add an array of cells to the appropriate cell vector **/
+	private void growCells(Cell[] cells) {
+		int i;
+		for (i = 0; i < cells.length; ++i)
+			AllCells[cells[0].getType().ordinal()].addElement(cells[i]);
+
+		return;
+	}
+
+	/** calculate coordinates for a new normal cell (newCell) based on the position of the cell it "grew"
+	  from (oldCell), attractions and random motion  **/
+
+	private void placeNewCell(Cell oldCell, Cell newCell, int icount) {
+		double dx;
+		double dy;
+		double dz;
+		double dx2;
+		double dy2;
+		double dz2;
+		double x = 0.;
+		double y = 0.;
+		double theta = 0;
+		double tempAngle;
+		double scale;
+		double ranAngle;
+		double alignAngle;
+		double maxDist;
+		double xMin = 0.;
+		double yToXMin = 0.;
+		double dist;
+		double m1;
+		double m2;
+		double dotprod;
+		double xAttr;
+		double yAttr;
+		double dist1;
+		double dist2;
+		Boolean didTransform = new Boolean(false);
+		boolean tooCloseAngle;
+		int noAttrCells;
+		Vector distVec;
+		int i;
+		int j;
+		int jattract = -1;
+		Cell oldOldCell;
+		Cell cellM = null;
+		Cell tempCell;
+		double totalAngle = 0;
+		DistNo tempDistNo;
+		dz = 0.;
+		distVec = new Vector(0);
+
+		// System.out.println("\nOLDCELL " + oldCell);
+		// System.out.println("OLDCELL Type " + oldCell.getSubType());
+		// System.out.println("INITIAL NEW CELL " + newCell);
+		// System.out.println("ITER COUNT  " + cellGrowthCount);
+
+
+		/* first normal cell */
+		if (oldCell.getLinkCellDown() == null) {
+			if (first == false) {
+				// System.out.println("RETURN oldCell.getLinkCellDown() == null");
+				return;
+			}
+
+			if (oldCell.getSubType() == SubTypes.INTERMEDIATE) {
+				newCell.setCellCount(newCell.getCellCount() - 1);
+				// System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
+
+				return;
+			}
+
+			newCell.setCoords(Transform.translate(oldCell.getCoords(), 0.,
+						1. * getStepLength(), 0.));
+			first = false;
+			/* all other normal cells */
+		} else {
+			if (cellGrowthCount <= 1) {
+				// System.out.println("RETURN Cell.getSubType() == SubTypes.INTERMEDIATE");
+				return;
+			}
+
+			if (getNumCellsToMain(oldCell) > MAX_NUM_CELLS_BRANCH) {
+				// System.out.println("RETURN getNumCellsToMain(oldCell)");
+				return;
+			}
+
+			// System.out.println("OLD CELL SUB TYPE " + oldCell.getSubType());
+
+			/* oldOldCell is the cell that oldCell grew from */
+			oldOldCell = oldCell.getLinkCellDown();
+
+			/* distance between oldCell and oldOldCell */
+			scale = scaleFactor(oldCell, oldOldCell);
+
+			/* oldCell is on one of the "main" branches, use the current length .
+			   The initial orientation of all new cells is x=0, y=getStepLength */
+			if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
+					(oldCell.getSubType() == SubTypes.MAIN_L) ||
+					(oldCell.getSubType() == SubTypes.MAIN_C) ||
+					(cellGrowthCount <= 2)) {
+				newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
+							getStepLength(), 0.));
+			} else if (oldCell.getSubType() == SubTypes.MAIN) {
+				newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
+							getStepLength(), 0.));
+			} else {
+				/* if newCell is a cell of subtype LAST, then make it 25 % the length of other normal cells */
+				if (newCell.getSubType() == SubTypes.LAST) {
+					newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
+								getBranchStepLength() * 0.25, 0.));
+				} else {
+					/* if normal cell iteration count is >= 7 cut the distance from oldCell to newCell by 50% */
+					if (cellGrowthCount >= 7) {
+						newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
+									getBranchStepLength() * 0.5, 0.));
+					} else {
+						newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
+									getBranchStepLength(), 0.));
+					}
+				}
+			}
+
+			/* vector between new and old cell */
+			dx = ((oldCell.getCoordX() - oldOldCell.getCoordX()) / scale) * getStepLength();
+			dy = ((oldCell.getCoordY() - oldOldCell.getCoordY()) / scale) * getStepLength();
+			dz = ((oldCell.getCoordZ() - oldOldCell.getCoordZ()) / scale) * getStepLength();
+
+			/* angle relative to Y axis of vector defined by oldCell and oldoldCell */
+			theta = getCalculatedAngle(dx, dy);
+
+			if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
+					(oldCell.getSubType() == SubTypes.MAIN_L) ||
+					(oldCell.getSubType() == SubTypes.MAIN_C) ||
+					(oldCell.getSubType() == SubTypes.MAIN)) {
+				/* see the getMainRandomAngle and getRandomAngle methods for a description */
+				ranAngle = getMainRandomAngle();
+			} else {
+				ranAngle = getRandomAngle();
+
+				// System.out.println("RANDOM ANGLE " + ranAngle);
+			}
+
+			/* set the cell SubType */
+			if (cellGrowthCount == 2) {
+				/* for cells # 2 and #3, create two MAIN branches (MAIN_R and MAIN_L) */
+				switch (icount) {
+					case 0:
+						ranAngle = -getSpreadAngle() / 2.;
+						// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+						newCell.setSubType(SubTypes.MAIN_L);
+						// System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+
+						break;
+
+					case 1:
+						ranAngle = getSpreadAngle() / 2.;
+						// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+						newCell.setSubType(SubTypes.MAIN_R);
+						// System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+
+						break;
+
+					case 2:
+						ranAngle = 0.;
+						// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+						newCell.setSubType(SubTypes.MAIN_C);
+						// System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+
+						break;
+				}
+			} else if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
+					(oldCell.getSubType() == SubTypes.MAIN_L) ||
+					(oldCell.getSubType() == SubTypes.MAIN_C)) {
+				// System.out.println("MAIN SWITCH");
+				if (oldCell.getSubType() == SubTypes.MAIN_R) {
+					// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+					newCell.setSubType(SubTypes.MAIN_R);
+					// System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+				} else if (oldCell.getSubType() == SubTypes.MAIN_L) {
+					// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+					newCell.setSubType(SubTypes.MAIN_L);
+					// System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+				} else if (oldCell.getSubType() == SubTypes.MAIN_C) {
+					// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
+					newCell.setSubType(SubTypes.MAIN_C);
+					// System.out.println(" CHANGE TO CELL SUBTYPE " + newCell.getSubType());
+				}
+
+				// System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
+				oldCell.setSubType(SubTypes.MAIN);
+				// System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
+			} else if (oldCell.getSubType() != SubTypes.MAIN && oldCell.getSubType() != SubTypes.MAIN_L && oldCell.getSubType() != SubTypes.MAIN_R && oldCell.getSubType() != SubTypes.MAIN_C) {
+				if ((oldCell.getGrowthCount() >= getMaxIntermediateBranch()) &&
+						(cellGrowthCount >= 2)) {
+					// System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
+					oldCell.setSubType(SubTypes.NORMAL);
+					// System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
+				} else if (oldCell.getSubType() != SubTypes.INTERMEDIATE) {
+					// System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
+					oldCell.setSubType(SubTypes.INTERMEDIATE);
+					// System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
+				}
+			}
+
+			/* increment count of cells grown from oldCell */
+			oldCell.setGrowthCount(oldCell.getGrowthCount() + 1);
+
+			// if(getAttractiveCellTotal() > 0 && oldCell.getSubType() == SubTypes.MAIN)
+			jattract = -1;
+
+			/* direct growth towards attractive cells */
+
+			if ((getAttractiveCellTotal() > 0) &&
+					(newCell.getSubType() != SubTypes.LAST)) {
+				x = oldCell.getCoordX();
+				y = oldCell.getCoordY();
+
+				/* distance table  from attactive cell i to normal cell */
+				for (i = 0; i < getAttractiveCellTotal(); ++i) {
+					cellM = getAttractiveCell(i);
+					xAttr = cellM.getCoordX();
+					yAttr = cellM.getCoordY();
+					dx2 = x - xAttr;
+					dy2 = y - yAttr;
+					distVec.addElement(new DistNo(i,
+								Math.sqrt((dx2 * dx2) + (dy2 * dy2))));
+				}
+
+				sortThem(distVec);
+				/* closest attractive cell */
+				tempDistNo = (DistNo) distVec.elementAt(0);
+				jattract = tempDistNo.getI();
+				xMin = getAttractiveCell(jattract).getCoordX();
+				yToXMin = getAttractiveCell(jattract).getCoordY();
+				dx = xMin - x;
+				dy = yToXMin - y;
+				alignAngle = getCalculatedAngle(dx, dy);
+				alignAngle /= DTR;
+
+				/* rotate towards attractive cell */
+
+				newCell.setCoords(Transform.rotateZ(alignAngle * DTR,
+							newCell.getCoords()));
+				totalAngle += alignAngle;
 
                 // System.out.println("ROTATE ANGLE ALIGN ANGLE " + alignAngle);
                 // System.out.println("ATTRACTIVE OLD RAN ANGLE " + ranAngle);
@@ -805,6 +805,7 @@ public class CellSimulation {
         int i;
         int j;
         int lastNum;
+        boolean docked = false;
         double m;
         double b;
         double x1;
@@ -815,6 +816,7 @@ public class CellSimulation {
         double y3;
         double x4;
         double y4;
+        double xdiff = 0,ydiff = 0;
         double xmin = 100000.;
         double ymin = 100000.;
         double r;
@@ -834,9 +836,6 @@ public class CellSimulation {
         double ranAngle;
         double[] coords = new double[3];
         double[] coordsdown = new double[3];
-        double[] refCoords = {
-            0., ELLIPSE_MAJOR / 2, 0.
-        };
         double[] rCoords1 = new double[3];
         double[] rCoords2 = new double[3];
         double scale;
@@ -867,6 +866,7 @@ public class CellSimulation {
         /* loop over metanephric cells */
 
         for (i = 0; i < mCellTotal; ++i) {
+            docked = false;
             mCell = getMetanephricCell(i);
             x1 = mCell.getCoordX();
             y1 = mCell.getCoordY();
@@ -878,7 +878,6 @@ public class CellSimulation {
                 dist = 100000.;
 
                 if (lastNum != 0) {
-                    System.out.println("ITER NO " + iter);
                     for (j = 0; j < lastNum; ++j) {
                         tempCell = getLastCell(j);
                         mAttract = false;
@@ -908,18 +907,26 @@ public class CellSimulation {
 
                         }
 
-                        dx = (x2 - refCoords[0]*minsin2) - x1;
-                        dy = (y2 - refCoords[1]*mincos2) - y1;
+                        dx = (x2 - (ELLIPSE_MAJOR/2)*minsin2) - x1;
+                        dy = (y2 - (ELLIPSE_MAJOR/2)*mincos2) - y1;
+
+                        dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
+                            didTransform);
+                        dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
+                            didTransform);
+  
+
+                        alignAngle = getCalculatedAngle(dxp, dyp);
+                        alignAngle /= DTR;
+                        
+                        mCell.setMangle(alignAngle);
 
                         
                         mincos1 = Math.cos(mCell.getMangle()*DTR);
                         minsin1 = Math.sin(mCell.getMangle()*DTR);
 
-                        dx +=  refCoords[0]*minsin1;
-                        dy +=  refCoords[1]*mincos1;
-
-
-                        distTempNP = Math.sqrt((dx * dx) + (dy * dy));
+                        dx -=  2.0*(ELLIPSE_MAJOR/2)*minsin1;
+                        dy -=  2.0*(ELLIPSE_MAJOR/2)*mincos1;
 
                         dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
                             didTransform);
@@ -927,7 +934,15 @@ public class CellSimulation {
                             didTransform);
 
                         distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
-       
+                        distTempNP = Math.sqrt((dx * dx) + (dy * dy));
+
+                        if ( (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41)) {
+                        System.out.println("DOCK #######  DX   DX " + dx + " DY " + dy); 
+                        }
+
+                        dx +=  (ELLIPSE_MAJOR/2)*minsin1;
+                        dy +=  (ELLIPSE_MAJOR/2)*mincos1;
+
 
                         /*  if distance between metanephric cell and LAST cell or a bound metanephric cell */
                         /*  is small enough, dock it */
@@ -939,21 +954,23 @@ public class CellSimulation {
                         if (distTemp < DOCKING_DISTANCE) {
                         if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
                         {
-                            System.out.println("MINCOS1 " + mincos1 + " MINSIN1 " + minsin1);
-                            System.out.println("MINCOS2 " + mincos2 + " MINSIN2 " + minsin2);
-                            System.out.println("#######     MCELL 41 COORDINATES "  + mCell.getCoordX() + " " + mCell.getCoordY());
-                            System.out.println("#######     DX " + dx + " DY " + dy); 
-                            System.out.println("#######     DXP " + dxp + " DYP " + dyp); 
-                            System.out.println("#######    ALIGN ANGLE " + mCell.getMangle()); 
+                            System.out.println("DOCK MINCOS1 " + mincos1 + " MINSIN1 " + minsin1);
+                            System.out.println("DOCK MINCOS2 " + mincos2 + " MINSIN2 " + minsin2);
+                            System.out.println("DOCK #######     MCELL 41 COORDINATES  BEFORE"  + mCell.getCoordX() + " " + mCell.getCoordY());
+                            xdiff = mCell.getCoordX();
+                            ydiff = mCell.getCoordY();
+                            System.out.println("DOCK #######     DX " + dx + " DY " + dy); 
+                            System.out.println("DOCK #######     DXP " + dxp + " DYP " + dyp); 
+                            System.out.println("DOCK #######    ALIGN ANGLE " + mCell.getMangle()); 
                             if (tempCell.getType() == Types.NORMAL)
                             {
-                                System.out.println("#######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
-                                System.out.println("#######     DISTANCE OF MCELL 41 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
+                                System.out.println("DOCK #######     NORMAL CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
+                                System.out.println("DOCK #######     DISTANCE OF MCELL 41 from NORMAL CELL"  + tempCell.getCellNumber() + " is " + distTemp);
                             }
                             else
                             {
-                                System.out.println("#######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
-                                System.out.println("######       DISTANCE OF MCELL 41 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
+                                System.out.println("DOCK #######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
+                                System.out.println("DOCK ######       DISTANCE OF MCELL 41 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
                             }
                             System.out.println();
                          }
@@ -984,13 +1001,20 @@ public class CellSimulation {
                             coords[1] = dy;
                             coords[2] = 0.;
                             mCell.setCoords(Transform.translate(mCell.getCoords(),coords));
+                            if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
+                            {
+                                System.out.println("#######     MCELL 41 COORDINATES  AFTER"  + mCell.getCoordX() + " " + mCell.getCoordY());
+                                xdiff -= mCell.getCoordX();
+                                ydiff -= mCell.getCoordY();
+                                System.out.println("#######     MCELL 41 DIFF"  + Math.sqrt(xdiff*xdiff+ydiff*ydiff));
+                            }
                             
                             mCell.setDock(tempCell.getCoordX(), tempCell.getCoordX(), 0);
 
-                            if (tempCell.getType() == Types.NORMAL)
+                            if (tempCell.getType() == Types.NORMAL && (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) )
                                 System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO NORMAL CELL " + tempCell.getCellNumber());
-                            else
-                                System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
+                            //else
+                             //   System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
 
                             /* when a metanephric cell docks, create a new one */
 
@@ -1047,8 +1071,8 @@ public class CellSimulation {
                             minsin2 = Math.sin(tempMinCell.getMangle()*DTR);
 
                         }
-                        dx = xmin - refCoords[0]*minsin2 - x1;
-                        dy = ymin - refCoords[1]*mincos2 - y1;
+                        dx = xmin - (ELLIPSE_MAJOR/2)*minsin2 - x1;
+                        dy = ymin - (ELLIPSE_MAJOR/2)*mincos2 - y1;
 
 
                         /* take into account peridic boundary conditions */
@@ -1080,6 +1104,9 @@ public class CellSimulation {
                         mCell.setCoords(periodicCoords(mCell.getCoords(),
                             didTransform, mCell.getCellNumber()));
 
+                        if (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) {
+                            System.out.println("NOT DOCK NORMAL MOVE MCELL 41 COORDS  " + mCell.getCoords()[0] + " " + mCell.getCoords()[1]);
+                        }
                         if (mAttract) {
                             mCell.setTestCell(tempMinCell);
                             // System.out.println("\nCOORD TEMP_MIN_CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));

@@ -53,7 +53,7 @@ public class TestDraw extends JApplet {
     private double coords[][]= new double[2][3];
     private double line[] = new double[3];
     private double scaleX, scaleY;
-    public static final double ELLIPSE_MAJOR = 1.;
+    public static final double ELLIPSE_MAJOR = 0.4;
     public static final double ELLIPSE_MINOR = .07;
     private double x0,y0,x1, y1, x2, y2;
     private double x1s,y1s,x2s,y2s;
