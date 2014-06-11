@@ -9,8 +9,10 @@ import java.util.*;
 public class CellSimulation {
 	/** degrees to radians **/
 	public static double TOL = 0.00001;
-	public static final double ELLIPSE_MAJOR = .4;
-	public static final double ELLIPSE_MINOR = .07;
+	// public static final double ELLIPSE_MAJOR = .4;
+	// public static final double ELLIPSE_MINOR = .07;
+	public static final double ELLIPSE_MAJOR = .2;
+	public static final double ELLIPSE_MINOR = .035;
 	public static final double DTR = Math.PI / 180.;
 	/** cell types : normal, metanephric, attractive **/
 	private static final int CELL_TYPES = 3;
@@ -925,8 +927,8 @@ public class CellSimulation {
                         mincos1 = Math.cos(mCell.getMangle()*DTR);
                         minsin1 = Math.sin(mCell.getMangle()*DTR);
 
-                        dx -=  2.0*(ELLIPSE_MAJOR/2)*minsin1;
-                        dy -=  2.0*(ELLIPSE_MAJOR/2)*mincos1;
+                        dx -=  (ELLIPSE_MAJOR/2)*minsin1;
+			dy -=  (ELLIPSE_MAJOR/2)*mincos1;
 
                         dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
                             didTransform);
@@ -935,23 +937,37 @@ public class CellSimulation {
 
                         distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
                         distTempNP = Math.sqrt((dx * dx) + (dy * dy));
+  
 
+                        if (mAttract == true) {
+                           dx +=  (ELLIPSE_MAJOR/2)*minsin1;
+			   dy +=  (ELLIPSE_MAJOR/2)*mincos1;
+                           mincos1 = Math.cos((tempCell.getMangle()+5)*DTR);
+                           minsin1 = Math.sin((tempCell.getMangle()+5)*DTR);
+                           mCell.setMangle(tempCell.getMangle()+5);
+                           dx -=  (ELLIPSE_MAJOR/2)*minsin1;
+                           dy -=  (ELLIPSE_MAJOR/2)*mincos1;
+                        }
+
+/*
                         if ( (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41)) {
                         System.out.println("DOCK #######  DX   DX " + dx + " DY " + dy); 
                         }
-
-                        dx +=  (ELLIPSE_MAJOR/2)*minsin1;
-                        dy +=  (ELLIPSE_MAJOR/2)*mincos1;
+*/
 
 
                         /*  if distance between metanephric cell and LAST cell or a bound metanephric cell */
                         /*  is small enough, dock it */
 
                         
+                        /*
                         if ( (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) && (tempCell.getCellNumber() == 87)) {
                             System.out.println("DOCK DISTANCE 41 FROM 87 " + distTemp);                             
                         }
+                        */ 
+
                         if (distTemp < DOCKING_DISTANCE) {
+                        /*
                         if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
                         {
                             System.out.println("DOCK MINCOS1 " + mincos1 + " MINSIN1 " + minsin1);
@@ -974,6 +990,7 @@ public class CellSimulation {
                             }
                             System.out.println();
                          }
+                         */
                             mCell.setSubType(SubTypes.LAST);
 
                             /* bound to a LAST cell */
@@ -1001,6 +1018,7 @@ public class CellSimulation {
                             coords[1] = dy;
                             coords[2] = 0.;
                             mCell.setCoords(Transform.translate(mCell.getCoords(),coords));
+                            /*
                             if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
                             {
                                 System.out.println("#######     MCELL 41 COORDINATES  AFTER"  + mCell.getCoordX() + " " + mCell.getCoordY());
@@ -1008,11 +1026,14 @@ public class CellSimulation {
                                 ydiff -= mCell.getCoordY();
                                 System.out.println("#######     MCELL 41 DIFF"  + Math.sqrt(xdiff*xdiff+ydiff*ydiff));
                             }
+                            */
                             
                             mCell.setDock(tempCell.getCoordX(), tempCell.getCoordX(), 0);
 
+                            /*
                             if (tempCell.getType() == Types.NORMAL && (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) )
                                 System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO NORMAL CELL " + tempCell.getCellNumber());
+                            */
                             //else
                              //   System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
 
