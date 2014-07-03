@@ -406,8 +406,8 @@ public class DrawSimulationApplet2D extends JApplet
                     g2d.setColor(Color.black);
                 if(cell1.getSubType() == SubTypes.LAST)
                     g2d.setColor(Color.gray);
-                if(cell1.getBoundCell() != null)
-                   if(cell1.getBoundCell().getNumberOfAttractCells() >= CellSimulation.MAX_ATTRACT)
+                if(cell1.getNormalBoundCell() != null)
+                   if(cell1.getNormalBoundCell().getNumberOfAttractCells() >= CellSimulation.MAX_ATTRACT)
                        g2d.setColor(Color.blue);
                 g2d.drawString(Integer.toString(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1)),0,0);
                 g2d.rotate((cell1.getMangle() - 90)*DTR);

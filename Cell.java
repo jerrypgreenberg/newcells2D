@@ -44,6 +44,8 @@ public class Cell {
     static int cellCount = 0;
     /** cell this cell is bound to (if this is a metanephric cell **/
     private Cell boundCell = null;
+    private int nBoundCell = 0;
+    private Cell normalBoundCell = null;
     /** metaneprhic cells bound to this cell **/   
     private Vector attractCells = new Vector(0);
     /** angles between cell and child cells (only 1 element used )**/
@@ -359,10 +361,18 @@ public class Cell {
     /** bind this cell **/
     public void setBoundCell(Cell bCell) {
         boundCell = bCell;
+        ++nBoundCell;
     }
     /** return the cell this cell is bound to **/
     public Cell getBoundCell() {
         return (boundCell);
+    }
+    public void setNormalBoundCell(Cell bCell) {
+        normalBoundCell = bCell;
+    }
+    /** return the cell this cell is bound to **/
+    public Cell getNormalBoundCell() {
+        return (normalBoundCell);
     }
     /**  set the periodic type of this cell **/
     public void setPeriodicType(PeriodicType newpType) {

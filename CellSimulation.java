@@ -997,10 +997,20 @@ public class CellSimulation {
                             if (tempCell.getType() == Types.NORMAL) {
                                 tempCell.addAttractCells(mCell);
                                 mCell.setBoundCell(tempCell);
+                                mCell.setNormalBoundCell(tempCell);
                                 /* bound to another metaneprhic cell  */
                             } else if (tempCell.getType() == Types.METANEPHRIC) {
                                 tempCell3.addAttractCells(mCell);
-                                mCell.setBoundCell(tempCell3);
+                                mCell.setNormalBoundCell(tempCell3);
+                                mCell.setBoundCell(tempCell);
+                                System.out.print("Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " BOUND TO: ");
+                                Cell xCell = mCell.getBoundCell();
+                                while ( xCell != null  && xCell.getType() == Types.METANEPHRIC)
+                                {
+                                   System.out.print(AllCells[Types.METANEPHRIC.ordinal()].indexOf(xCell) + " ");
+                                   xCell = xCell.getBoundCell();
+                                }
+                                System.out.println();
 
                                 if (debug)
                                     System.out.println(mCell.getDock(0) + " " +
