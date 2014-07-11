@@ -104,7 +104,7 @@ public class DrawSimulationApplet2D extends JApplet
     // private boolean contourOn = false;
     long seed;
     Random random;
-    Ellipse2D.Double circle,littleCircle,ellipse,littleEllipse;
+    Ellipse2D.Double circle,littleCircle,ellipse,littleEllipse,metanephric_circle;
     Ellipse2D.Double veryLittleCircle;
     private Vector currentConfig;
     private Vector track = new Vector();
@@ -218,6 +218,7 @@ public class DrawSimulationApplet2D extends JApplet
         setScaleX(cs.getStepLength()*getIter()*1.6/(getCellSkip()*getScale()), XSCREENSIZE);
         setScaleY(cs.getStepLength()*getIter()*1.6/(getCellSkip()*getScale()), YSCREENSIZE);
         circle = new Ellipse2D.Double(0,0 , CIRCLE_WIDTH, CIRCLE_WIDTH);
+        metanephric_circle = new Ellipse2D.Double(0,0 , CellSimulation.METANEPHRIC_WIDTH*getScaleX(),CellSimulation.METANEPHRIC_WIDTH*getScaleY());
         littleCircle = new Ellipse2D.Double(0, 0, CellSimulation.ELLIPSE_MAJOR, CellSimulation.ELLIPSE_MINOR);
         veryLittleCircle = new Ellipse2D.Double(0, 0, VERY_LITTLE_ELLIPSE_MAJOR, VERY_LITTLE_ELLIPSE_MINOR);
         ellipse = new Ellipse2D.Double(0, 0, CellSimulation.ELLIPSE_MAJOR*getScaleX(), CellSimulation.ELLIPSE_MINOR*getScaleY());
@@ -400,8 +401,12 @@ public class DrawSimulationApplet2D extends JApplet
                 g2d.translate(XMIDDLE, YDISPLAY);
                 g2d.translate(-getXdisp()*getScaleX(),getYdisp()*getScaleY());
                 g2d.translate(x0*getScaleX(), -y0*getScaleY());
-                if(cell1.getAddedType() == AddedType.ADDED)
                 g2d.setColor(Color.red);
+                g2d.drawString(Integer.toString(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1)),0,0);
+                /*
+                if(cell1.getAddedType() == AddedType.ADDED)
+                    g2d.setColor(Color.red);
+                */
                 if(cell1.getPeriodicType() == PeriodicType.CROSSED)
                     g2d.setColor(Color.black);
                 if(cell1.getSubType() == SubTypes.LAST)
@@ -409,10 +414,16 @@ public class DrawSimulationApplet2D extends JApplet
                 if(cell1.getNormalBoundCell() != null)
                    if(cell1.getNormalBoundCell().getNumberOfAttractCells() >= CellSimulation.MAX_ATTRACT)
                        g2d.setColor(Color.blue);
-                g2d.drawString(Integer.toString(cs.AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1)),0,0);
                 g2d.rotate((cell1.getMangle() - 90)*DTR);
                 g2d.translate(- (CellSimulation.ELLIPSE_MAJOR/2)*getScaleX(), - (CellSimulation.ELLIPSE_MINOR/2)*getScaleY());
                 g2d.fill(ellipse);
+
+                g2d.setTransform(new AffineTransform());
+                g2d.translate(XMIDDLE, YDISPLAY);
+                g2d.translate(-getXdisp()*getScaleX(),getYdisp()*getScaleY());
+                g2d.translate(x0*getScaleX(), -y0*getScaleY());
+                g2d.translate(- (CellSimulation.METANEPHRIC_WIDTH/2)*getScaleX(), - (CellSimulation.METANEPHRIC_WIDTH/2)*getScaleY());
+                g2d.draw(metanephric_circle);
           }
         }
     }
@@ -580,6 +591,7 @@ public class DrawSimulationApplet2D extends JApplet
             setScaleX(cs.getStepLength()*getIter()*1.6/(getCellSkip()*getScale()), XSCREENSIZE);
             setScaleY(cs.getStepLength()*getIter()*1.6/(getCellSkip()*getScale()), YSCREENSIZE);
             ellipse = new Ellipse2D.Double(0, 0, CellSimulation.ELLIPSE_MAJOR*getScaleX(), CellSimulation.ELLIPSE_MINOR*getScaleY());
+            metanephric_circle = new Ellipse2D.Double(0,0 , CellSimulation.METANEPHRIC_WIDTH*getScaleX(),CellSimulation.METANEPHRIC_WIDTH*getScaleY());
             setXdisp(getXcenter());
             if(getYcenter() != 0)
                  setYdisp(getYcenter() - (cs.getStepLength()*getIter()*1.6/(getCellSkip()*getScale()))/2);

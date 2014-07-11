@@ -28,6 +28,8 @@ public class CellSimulation {
 	public static final double BRANCH_STEP_LENGTH = 1.;
 	/** maximum number of metanephric cell updates **/
 	private static final int MAX_METANEPHRIC_ATTRACT_MOVES = 60;
+        public static final double METANEPHRIC_WIDTH = 0.2;
+        public static final double ANGLE_DEVIATION = 5;
 	/** maximum number of attractive cells that are actually used **/
 	public static final int MAX_ATTRACT = 10;
 	/** max x coordinate **/
@@ -830,8 +832,12 @@ public class CellSimulation {
         double dxp;
         double dyp;
         double dzp;
+        double dxm;
+        double dym;
+        double dzm;
         double distTemp;
         double distTempNP;
+        double distTempM;
         double alignAngle;
         double minsin1,mincos1;
         double minsin2,mincos2;
@@ -844,6 +850,7 @@ public class CellSimulation {
         boolean mAttract = false;
         boolean bound = false;
         Cell mCell;
+        Cell cCell;
         Cell tempCell = null;
         Cell tempCell2;
         Cell tempCell3 = null;
@@ -912,6 +919,9 @@ public class CellSimulation {
                         dx = (x2 - (ELLIPSE_MAJOR/2)*minsin2) - x1;
                         dy = (y2 - (ELLIPSE_MAJOR/2)*mincos2) - y1;
 
+                        dxm = x2 - x1;
+                        dym = y2 - y1;
+
                         dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
                             didTransform);
                         dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
@@ -937,14 +947,19 @@ public class CellSimulation {
 
                         distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
                         distTempNP = Math.sqrt((dx * dx) + (dy * dy));
+                        distTempM = Math.sqrt((dxm * dxm) + (dym * dym));
   
-
                         if (mAttract == true) {
+                           cCell = checkMetanephricDistances(mCell);
+                           if(cCell != null)
+                           {
+                               System.out.println("!!!!! RANDOM MOVE COLLISION BETWEEN " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " AND " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cCell));
+                           }
                            dx +=  (ELLIPSE_MAJOR/2)*minsin1;
 			   dy +=  (ELLIPSE_MAJOR/2)*mincos1;
-                           mincos1 = Math.cos((tempCell.getMangle()+5)*DTR);
-                           minsin1 = Math.sin((tempCell.getMangle()+5)*DTR);
-                           mCell.setMangle(tempCell.getMangle()+5);
+                           mincos1 = Math.cos((tempCell.getMangle()+ANGLE_DEVIATION)*DTR);
+                           minsin1 = Math.sin((tempCell.getMangle()+ANGLE_DEVIATION)*DTR);
+                           mCell.setMangle(tempCell.getMangle()+ANGLE_DEVIATION);
                            dx -=  (ELLIPSE_MAJOR/2)*minsin1;
                            dy -=  (ELLIPSE_MAJOR/2)*mincos1;
                         }
@@ -987,8 +1002,6 @@ public class CellSimulation {
                             {
                                 System.out.println("DOCK #######     DOCKED METANEPHRIC CELL COORDINATES "  + tempCell.getCoordX() + " " + tempCell.getCoordY());
                                 System.out.println("DOCK ######       DISTANCE OF MCELL 41 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
-                            }
-                            System.out.println();
                          }
                          */
                             mCell.setSubType(SubTypes.LAST);
@@ -1003,21 +1016,22 @@ public class CellSimulation {
                                 tempCell3.addAttractCells(mCell);
                                 mCell.setNormalBoundCell(tempCell3);
                                 mCell.setBoundCell(tempCell);
-                                System.out.print("Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " BOUND TO: ");
-                                Cell xCell = mCell.getBoundCell();
-                                while ( xCell != null  && xCell.getType() == Types.METANEPHRIC)
-                                {
-                                   System.out.print(AllCells[Types.METANEPHRIC.ordinal()].indexOf(xCell) + " ");
-                                   xCell = xCell.getBoundCell();
-                                }
-                                System.out.println();
-
                                 if (debug)
                                     System.out.println(mCell.getDock(0) + " " +
                                         mCell.getDock(1));
                                 if (debug)
-                                    System.out.println(tempCell.getDock(0) + " " +
-                                        tempCell.getDock(1));
+                                    System.out.println(tempCell.getDock(0) + " " + tempCell.getDock(1));
+                                if(distTempM < METANEPHRIC_WIDTH)
+                                System.out.println("!!!!! Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " COLLISION NUMBER WITH CELL NUMBER  " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
+                                  
+                                System.out.print("Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " BOUND TO: ");
+                                Cell xCell = tempCell.getBoundCell();
+                                while ( xCell != null  && xCell.getType() == Types.METANEPHRIC)
+                                {
+                                     System.out.print(AllCells[Types.METANEPHRIC.ordinal()].indexOf(xCell) + " ");
+                                     xCell = xCell.getBoundCell();
+                                }
+                                System.out.println();
                             } else {
                                 System.err.println("Error wrong type of cell");
                                 System.exit(-1);
@@ -1578,6 +1592,29 @@ public class CellSimulation {
                 }
             }
         }
+    }
+    public Cell checkMetanephricDistances(Cell mCell)
+    {
+       double dx,dy,dz;
+       double dist2;
+       int cellNum;
+       double compare=METANEPHRIC_WIDTH*METANEPHRIC_WIDTH;
+       Cell cell1 = null;
+       for (cellNum = 0; cellNum < getMetanephricCellTotal(); ++cellNum) {
+            cell1 = getMetanephricCell(cellNum);
+            if ( ! mCell.equals(cell1) )
+            {
+               dx   = mCell.getCoordX() - cell1.getCoordX();;
+               dy   = mCell.getCoordY() - cell1.getCoordY();;
+               dist2 = dx*dx+dy*dy;
+               if(dist2 < compare)
+               {
+                 System.out.println("!! DISTANCE " + Math.sqrt(dx*dx+dy*dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
+                 return(cell1);
+               }
+            }
+       }
+       return(cell1);
     }
 
     /**  return difference of x coordinates transformed for peridic boundary conditions **/
