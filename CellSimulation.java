@@ -880,6 +880,7 @@ public class CellSimulation {
             x1 = mCell.getCoordX();
             y1 = mCell.getCoordY();
             bound = false;
+            checkAllMetanephricDistances(mCell);
 
             /*  only consider attraction between normal cells of subtype LAST or bound metanephric and unbound umetanephric cells */
 
@@ -950,11 +951,13 @@ public class CellSimulation {
                         distTempM = Math.sqrt((dxm * dxm) + (dym * dym));
   
                         if (mAttract == true) {
+/*
                            cCell = checkMetanephricDistances(mCell);
                            if(cCell != null)
                            {
                                System.out.println("!!!!! RANDOM MOVE COLLISION BETWEEN " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " AND " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cCell));
                            }
+*/
                            dx +=  (ELLIPSE_MAJOR/2)*minsin1;
 			   dy +=  (ELLIPSE_MAJOR/2)*mincos1;
                            mincos1 = Math.cos((tempCell.getMangle()+ANGLE_DEVIATION)*DTR);
@@ -1593,10 +1596,12 @@ public class CellSimulation {
             }
         }
     }
-    public Cell checkMetanephricDistances(Cell mCell)
+    public void checkAllMetanephricDistances(Cell mCell)
     {
        double dx,dy,dz;
        double dist2;
+       double dxp,dyp;
+       Boolean didTransform = new Boolean(false);
        int cellNum;
        double compare=METANEPHRIC_WIDTH*METANEPHRIC_WIDTH;
        Cell cell1 = null;
@@ -1606,7 +1611,34 @@ public class CellSimulation {
             {
                dx   = mCell.getCoordX() - cell1.getCoordX();;
                dy   = mCell.getCoordY() - cell1.getCoordY();;
-               dist2 = dx*dx+dy*dy;
+               dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,didTransform);
+               dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC, didTransform);
+               dist2 = dxp*dxp+dyp*dyp;
+               if(dist2 < compare)
+               {
+                 System.out.println("!! DISTANCE " + Math.sqrt(dx*dx+dy*dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
+               }
+            }
+       }
+    }
+    public Cell checkMetanephricDistances(Cell mCell)
+    {
+       double dx,dy,dz;
+       double dxp,dyp;
+       double dist2;
+       int cellNum;
+       Boolean didTransform = new Boolean(false);
+       double compare=METANEPHRIC_WIDTH*METANEPHRIC_WIDTH;
+       Cell cell1 = null;
+       for (cellNum = 0; cellNum < getMetanephricCellTotal(); ++cellNum) {
+            cell1 = getMetanephricCell(cellNum);
+            if ( ! mCell.equals(cell1) )
+            {
+               dx   = mCell.getCoordX() - cell1.getCoordX();;
+               dy   = mCell.getCoordY() - cell1.getCoordY();;
+               dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,didTransform);
+               dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC, didTransform);
+               dist2 = dxp*dxp+dyp*dyp;
                if(dist2 < compare)
                {
                  System.out.println("!! DISTANCE " + Math.sqrt(dx*dx+dy*dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
