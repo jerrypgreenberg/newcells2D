@@ -532,6 +532,7 @@ public class DrawSimulationApplet2D extends JApplet
             ++count;
 //                 if (count < getIter()) {
                 cs.updateSimulation(Render.NO_PRINT,count-1);
+                System.out.println("##$$##  NUMBER OF NORMAL CELLS " + cs.getNormalCellTotal());
                   repaint();
 //               }
         } 
@@ -705,6 +706,7 @@ public class DrawSimulationApplet2D extends JApplet
      */
     public void setupSimulation (long seed) {
         cs = new CellSimulation(getIter(), getMinAngle(), getMaxAngle(),new Cell(0., 0., 0., SubTypes.END), seed, 1.0, getFraction(), getMaxBranch(),getMaxIntermediateBranch(),getSpreadAngle(),getCellSkip());
+        System.out.println("##$$##  NUMBER OF NORMAL CELLS " + cs.getNormalCellTotal());
     }
 
     /**

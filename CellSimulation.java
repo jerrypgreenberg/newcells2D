@@ -1,5 +1,6 @@
 import java.lang.Math.*;
 
+
 import java.util.*;
 
 
@@ -28,8 +29,8 @@ public class CellSimulation {
 	public static final double BRANCH_STEP_LENGTH = 1.;
 	/** maximum number of metanephric cell updates **/
 	private static final int MAX_METANEPHRIC_ATTRACT_MOVES = 60;
-        public static final double METANEPHRIC_WIDTH = 0.2;
-        public static final double ANGLE_DEVIATION = 5;
+	public static final double METANEPHRIC_WIDTH = 0.2;
+	public static final double ANGLE_DEVIATION = 5;
 	/** maximum number of attractive cells that are actually used **/
 	public static final int MAX_ATTRACT = 10;
 	/** max x coordinate **/
@@ -109,7 +110,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		random = new Random(getRandomSeed());
 		setFraction(1.);
@@ -137,7 +138,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		random = new Random(getRandomSeed());
 		setMaxBranch(3);
@@ -162,7 +163,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		random = new Random(getRandomSeed());
 		setFraction(1.);
@@ -192,7 +193,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		random = new Random(getRandomSeed());
 		growCells(cells);
@@ -207,7 +208,7 @@ public class CellSimulation {
 	}
 
 	public CellSimulation(int inIter, double minang, double maxang, Cell cell,
-			long seed, double length, double fraction, int maxB, int intermediate) {
+	long seed, double length, double fraction, int maxB, int intermediate) {
 		int i;
 		setIter(inIter);
 		setStepLength(length);
@@ -220,7 +221,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		setRandomSeed(seed);
 		random = new Random(getRandomSeed());
@@ -239,8 +240,8 @@ public class CellSimulation {
 
 	/** The constructor currently called by DrawSimulationApplet2D **/
 	public CellSimulation(int inIter, double minang, double maxang, Cell cell,
-			long seed, double length, double fraction, int maxB, int intermediate,
-			double spread, int skip) {
+	long seed, double length, double fraction, int maxB, int intermediate,
+	double spread, int skip) {
 		int i;
 		setIter(inIter);
 		setStepLength(length);
@@ -258,7 +259,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		setRandomSeed(seed);
 		random = new Random(getRandomSeed());
@@ -274,8 +275,8 @@ public class CellSimulation {
 	}
 
 	public CellSimulation(int inIter, double minang, double maxang, Cell cell,
-			Cell[] cells, long seed, double length, double fraction, int maxB,
-			int intermediate) {
+	Cell[] cells, long seed, double length, double fraction, int maxB,
+	int intermediate) {
 		int i;
 		setIter(inIter);
 		setStepLength(length);
@@ -288,7 +289,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		setRandomSeed(seed);
 		random = new Random(getRandomSeed());
@@ -307,7 +308,7 @@ public class CellSimulation {
 	}
 
 	public CellSimulation(int inIter, double minang, double maxang,
-			Cell[] cells, long seed, double length, double fraction) {
+	Cell[] cells, long seed, double length, double fraction) {
 		int i;
 		setIter(inIter);
 		setStepLength(length);
@@ -320,7 +321,7 @@ public class CellSimulation {
 		AllCells = new Vector[CELL_TYPES];
 
 		for (i = 0; i < CELL_TYPES; ++i)
-			AllCells[i] = new Vector(0);
+		AllCells[i] = new Vector(0);
 
 		setRandomSeed(seed);
 		random = new Random(getRandomSeed());
@@ -481,7 +482,7 @@ public class CellSimulation {
 	private void growCells(Cell[] cells) {
 		int i;
 		for (i = 0; i < cells.length; ++i)
-			AllCells[cells[0].getType().ordinal()].addElement(cells[i]);
+		AllCells[cells[0].getType().ordinal()].addElement(cells[i]);
 
 		return;
 	}
@@ -549,8 +550,9 @@ public class CellSimulation {
 				return;
 			}
 
+			System.out.println("##$$## NEW CELL 1");
 			newCell.setCoords(Transform.translate(oldCell.getCoords(), 0.,
-						1. * getStepLength(), 0.));
+			1. * getStepLength(), 0.));
 			first = false;
 			/* all other normal cells */
 		} else {
@@ -574,28 +576,25 @@ public class CellSimulation {
 
 			/* oldCell is on one of the "main" branches, use the current length .
 			   The initial orientation of all new cells is x=0, y=getStepLength */
-			if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
-					(oldCell.getSubType() == SubTypes.MAIN_L) ||
-					(oldCell.getSubType() == SubTypes.MAIN_C) ||
-					(cellGrowthCount <= 2)) {
+			if ((oldCell.getSubType() == SubTypes.MAIN_R) || (oldCell.getSubType() == SubTypes.MAIN_L) || (oldCell.getSubType() == SubTypes.MAIN_C) || (cellGrowthCount <= 2)) {
 				newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-							getStepLength(), 0.));
+				getStepLength(), 0.));
 			} else if (oldCell.getSubType() == SubTypes.MAIN) {
 				newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-							getStepLength(), 0.));
+				getStepLength(), 0.));
 			} else {
 				/* if newCell is a cell of subtype LAST, then make it 25 % the length of other normal cells */
 				if (newCell.getSubType() == SubTypes.LAST) {
 					newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-								getBranchStepLength() * 0.25, 0.));
+					getBranchStepLength() * 0.25, 0.));
 				} else {
 					/* if normal cell iteration count is >= 7 cut the distance from oldCell to newCell by 50% */
 					if (cellGrowthCount >= 7) {
 						newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-									getBranchStepLength() * 0.5, 0.));
+						getBranchStepLength() * 0.5, 0.));
 					} else {
 						newCell.setCoords(Transform.translate(ZERO_COORDS, 0.,
-									getBranchStepLength(), 0.));
+						getBranchStepLength(), 0.));
 					}
 				}
 			}
@@ -608,10 +607,7 @@ public class CellSimulation {
 			/* angle relative to Y axis of vector defined by oldCell and oldoldCell */
 			theta = getCalculatedAngle(dx, dy);
 
-			if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
-					(oldCell.getSubType() == SubTypes.MAIN_L) ||
-					(oldCell.getSubType() == SubTypes.MAIN_C) ||
-					(oldCell.getSubType() == SubTypes.MAIN)) {
+			if ((oldCell.getSubType() == SubTypes.MAIN_R) || (oldCell.getSubType() == SubTypes.MAIN_L) || (oldCell.getSubType() == SubTypes.MAIN_C) || (oldCell.getSubType() == SubTypes.MAIN)) {
 				/* see the getMainRandomAngle and getRandomAngle methods for a description */
 				ranAngle = getMainRandomAngle();
 			} else {
@@ -648,9 +644,7 @@ public class CellSimulation {
 
 						break;
 				}
-			} else if ((oldCell.getSubType() == SubTypes.MAIN_R) ||
-					(oldCell.getSubType() == SubTypes.MAIN_L) ||
-					(oldCell.getSubType() == SubTypes.MAIN_C)) {
+			} else if ((oldCell.getSubType() == SubTypes.MAIN_R) || (oldCell.getSubType() == SubTypes.MAIN_L) || (oldCell.getSubType() == SubTypes.MAIN_C)) {
 				// System.out.println("MAIN SWITCH");
 				if (oldCell.getSubType() == SubTypes.MAIN_R) {
 					// System.out.print("NEW CELL NUMBER " + newCell.getCellNumber() + " CELL TYPE " + newCell.getType() + " CELL SUBTYPE " + newCell.getSubType());
@@ -670,8 +664,7 @@ public class CellSimulation {
 				oldCell.setSubType(SubTypes.MAIN);
 				// System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
 			} else if (oldCell.getSubType() != SubTypes.MAIN && oldCell.getSubType() != SubTypes.MAIN_L && oldCell.getSubType() != SubTypes.MAIN_R && oldCell.getSubType() != SubTypes.MAIN_C) {
-				if ((oldCell.getGrowthCount() >= getMaxIntermediateBranch()) &&
-						(cellGrowthCount >= 2)) {
+				if ((oldCell.getGrowthCount() >= getMaxIntermediateBranch()) && (cellGrowthCount >= 2)) {
 					// System.out.print("OLD CELL NUMBER " + oldCell.getCellNumber() + " CELL TYPE " + oldCell.getType() + " CELL SUBTYPE " + oldCell.getSubType());
 					oldCell.setSubType(SubTypes.NORMAL);
 					// System.out.println(" CHANGE TO CELL SUBTYPE " + oldCell.getSubType());
@@ -690,8 +683,7 @@ public class CellSimulation {
 
 			/* direct growth towards attractive cells */
 
-			if ((getAttractiveCellTotal() > 0) &&
-					(newCell.getSubType() != SubTypes.LAST)) {
+			if ((getAttractiveCellTotal() > 0) && (newCell.getSubType() != SubTypes.LAST)) {
 				x = oldCell.getCoordX();
 				y = oldCell.getCoordY();
 
@@ -703,7 +695,7 @@ public class CellSimulation {
 					dx2 = x - xAttr;
 					dy2 = y - yAttr;
 					distVec.addElement(new DistNo(i,
-								Math.sqrt((dx2 * dx2) + (dy2 * dy2))));
+					Math.sqrt((dx2 * dx2) + (dy2 * dy2))));
 				}
 
 				sortThem(distVec);
@@ -720,272 +712,271 @@ public class CellSimulation {
 				/* rotate towards attractive cell */
 
 				newCell.setCoords(Transform.rotateZ(alignAngle * DTR,
-							newCell.getCoords()));
+				newCell.getCoords()));
 				totalAngle += alignAngle;
 
-                // System.out.println("ROTATE ANGLE ALIGN ANGLE " + alignAngle);
-                // System.out.println("ATTRACTIVE OLD RAN ANGLE " + ranAngle);
-                // System.out.println("ATTRACTIVE OLD ANGLE TOTAL (-180 - +180) " +
-                //     totalAngle);
-                /* add random angle */
-                tempAngle = totalAngle + ranAngle;
+				// System.out.println("ROTATE ANGLE ALIGN ANGLE " + alignAngle);
+				// System.out.println("ATTRACTIVE OLD RAN ANGLE " + ranAngle);
+				// System.out.println("ATTRACTIVE OLD ANGLE TOTAL (-180 - +180) " +
+				//     totalAngle);
+				/* add random angle */
+				tempAngle = totalAngle + ranAngle;
 
-                if (tempAngle < 0) {
-                    tempAngle += 360.;
-                }
+				if (tempAngle < 0) {
+					tempAngle += 360.;
+				}
 
-                if (ranAngle > 180.) {
-                    ranAngle = ranAngle - 360.;
-                }
+				if (ranAngle > 180.) {
+					ranAngle = ranAngle - 360.;
+				}
 
-                // System.out.println(
-                //   "ATTRACTIVE NEW RAN ANGLE AFTER (-180 - +180) " + ranAngle);
-                // System.out.println("ATTRACTIVE NEW ANGLE TOTAL  " + totalAngle);
-            } else if (newCell.getSubType() == SubTypes.LAST) {
-                dx = ((oldCell.getCoordX() - oldOldCell.getCoordX()) / scale) * getStepLength();
-                dy = ((oldCell.getCoordY() - oldOldCell.getCoordY()) / scale) * getStepLength();
-                dz = ((oldCell.getCoordZ() - oldOldCell.getCoordZ()) / scale) * getStepLength();
+				// System.out.println(
+				//   "ATTRACTIVE NEW RAN ANGLE AFTER (-180 - +180) " + ranAngle);
+				// System.out.println("ATTRACTIVE NEW ANGLE TOTAL  " + totalAngle);
+			} else if (newCell.getSubType() == SubTypes.LAST) {
+				dx = ((oldCell.getCoordX() - oldOldCell.getCoordX()) / scale) * getStepLength();
+				dy = ((oldCell.getCoordY() - oldOldCell.getCoordY()) / scale) * getStepLength();
+				dz = ((oldCell.getCoordZ() - oldOldCell.getCoordZ()) / scale) * getStepLength();
 
-                /* rotate 90 deg */
+				/* rotate 90 deg */
 
-                theta = getCalculatedAngle(dx, dy);
-                ranAngle = perpAngleSign * 90.;
-                perpAngleSign *= -1;
-                totalAngle += ((theta / DTR) + ranAngle);
-                newCell.setCoords(Transform.rotateZ(theta, newCell.getCoords()));
-            } else {
-                //                  System.out.println("NORMAL ALIGN ANGLE " + theta/DTR);
-                //                 System.out.println("NORMAL RANDOM ANGLE " + ranAngle);
+				theta = getCalculatedAngle(dx, dy);
+				ranAngle = perpAngleSign * 90.;
+				perpAngleSign *= -1;
+				totalAngle += ((theta / DTR) + ranAngle);
+				newCell.setCoords(Transform.rotateZ(theta, newCell.getCoords()));
+			} else {
+				//                  System.out.println("NORMAL ALIGN ANGLE " + theta/DTR);
+				//                 System.out.println("NORMAL RANDOM ANGLE " + ranAngle);
 
-                /* rotate in line with old cell and old old cell */
-                newCell.setCoords(Transform.rotateZ(theta, newCell.getCoords()));
-                totalAngle += (theta / DTR);
+				/* rotate in line with old cell and old old cell */
+				newCell.setCoords(Transform.rotateZ(theta, newCell.getCoords()));
+				totalAngle += (theta / DTR);
 
-                // System.out.println("ROTATE ANGLE THETA " + (theta / DTR));
-            }
+				// System.out.println("ROTATE ANGLE THETA " + (theta / DTR));
+			}
 
-            totalAngle += ranAngle;
+			totalAngle += ranAngle;
 
-            /*  now rotate by random angle */
+			/*  now rotate by random angle */
 
-            newCell.setCoords(Transform.rotateZ(ranAngle * DTR,
-                newCell.getCoords()));
+			newCell.setCoords(Transform.rotateZ(ranAngle * DTR,
+			newCell.getCoords()));
 
-            /* transform "tail" of new vector to the coordinates of the old cell */
-            newCell.setCoords(Transform.translate(newCell.getCoords(),
-                oldCell.getCoords()));
-        }
+			/* transform "tail" of new vector to the coordinates of the old cell */
+			newCell.setCoords(Transform.translate(newCell.getCoords(),
+			oldCell.getCoords()));
+		}
 
-        /* dont add new cell if its beyond arc defined by attractive cells */
+		/* dont add new cell if its beyond arc defined by attractive cells */
 
-        if (jattract >= 0) {
-            dx = getAttractiveCell(jattract).getCoordX();
-            dy = getAttractiveCell(jattract).getCoordY();
-            dist1 = Math.sqrt((dx * dx) + (dy * dy));
-            dx = newCell.getCoordX();
-            dy = newCell.getCoordY();
-            dist2 = Math.sqrt((dx * dx) + (dy * dy));
+		if (jattract >= 0) {
+			dx = getAttractiveCell(jattract).getCoordX();
+			dy = getAttractiveCell(jattract).getCoordY();
+			dist1 = Math.sqrt((dx * dx) + (dy * dy));
+			dx = newCell.getCoordX();
+			dy = newCell.getCoordY();
+			dist2 = Math.sqrt((dx * dx) + (dy * dy));
 
-            if (dist2 > dist1) {
-                // System.out.println("CELL " + newCell.getCellNumber() + " OUT OF BOUNDS");
-                return;
-            }
-        }
+			if (dist2 > dist1) {
+				// System.out.println("CELL " + newCell.getCellNumber() + " OUT OF BOUNDS");
+				return;
+			}
+		}
 
-        /* add new cell */
+		/* add new cell */
 
-        growCell(newCell);
+		growCell(newCell);
 
-        if (totalAngle < 0) {
-            totalAngle = 360. - totalAngle;
-        }
+		if (totalAngle < 0) {
+			totalAngle = 360. - totalAngle;
+		}
 
-        // System.out.println("TOTAL ANGLE " + totalAngle);
-        newCell.setAngle(totalAngle);
-    }
+		// System.out.println("TOTAL ANGLE " + totalAngle);
+		newCell.setAngle(totalAngle);
+	}
 
-    /** move metanephric cells based on attraction to LAST cells and random motion **/
-    private void moveMetanenephricCells() {
-        int i;
-        int j;
-        int lastNum;
-        boolean docked = false;
-        double m;
-        double b;
-        double x1;
-        double y1;
-        double x2;
-        double y2;
-        double x3;
-        double y3;
-        double x4;
-        double y4;
-        double xdiff = 0,ydiff = 0;
-        double xmin = 100000.;
-        double ymin = 100000.;
-        double r;
-        double theta;
-        double dist = 100000.;
-        double dx = 0;
-        double dy = 0;
-        double dz = 0.;
-        double dxp;
-        double dyp;
-        double dzp;
-        double dxm;
-        double dym;
-        double dzm;
-        double distTemp;
-        double distTempNP;
-        double distTempM;
-        double alignAngle;
-        double minsin1,mincos1;
-        double minsin2,mincos2;
-        double ranAngle;
-        double[] coords = new double[3];
-        double[] coordsdown = new double[3];
-        double[] rCoords1 = new double[3];
-        double[] rCoords2 = new double[3];
-        double scale;
-        boolean mAttract = false;
-        boolean bound = false;
-        Cell mCell;
-        Cell cCell;
-        Cell tempCell = null;
-        Cell tempCell2;
-        Cell tempCell3 = null;
-        Cell newmCell;
-        Cell tempMinCell = null;
-        Boolean didTransform = new Boolean(false);
-        int mCellTotal;
+	/** move metanephric cells based on attraction to LAST cells and random motion **/
+	private void moveMetanenephricCells() {
+		int i;
+		int j;
+		int lastNum;
+		boolean docked = false;
+		double m;
+		double b;
+		double x1;
+		double y1;
+		double x2;
+		double y2;
+		double x3;
+		double y3;
+		double x4;
+		double y4;
+		double xdiff = 0, ydiff = 0;
+		double xmin = 100000.;
+		double ymin = 100000.;
+		double r;
+		double theta;
+		double dist = 100000.;
+		double dx = 0;
+		double dy = 0;
+		double dz = 0.;
+		double dxp;
+		double dyp;
+		double dzp;
+		double dxm;
+		double dym;
+		double dzm;
+		double distTemp;
+		double distTempNP;
+		double distTempM;
+		double alignAngle;
+		double minsin1, mincos1;
+		double minsin2, mincos2;
+		double ranAngle;
+		double[] coords = new double[3];
+		double[] coordsdown = new double[3];
+		double[] rCoords1 = new double[3];
+		double[] rCoords2 = new double[3];
+		double scale;
+		boolean mAttract = false;
+		boolean bound = false;
+		Cell mCell;
+		Cell cCell;
+		Cell tempCell = null;
+		Cell tempCell2;
+		Cell tempCell3 = null;
+		Cell newmCell;
+		Cell tempMinCell = null;
+		Boolean didTransform = new Boolean(false);
+		int mCellTotal;
 
-        mCellTotal = getMetanephricCellTotal();
+		mCellTotal = getMetanephricCellTotal();
 
-        if (mCellTotal == 0) {
-            return;
-        }
+		if (mCellTotal == 0) {
+			return;
+		}
 
-        lastNum = getLastCellTotal();
+		lastNum = getLastCellTotal();
 
-        if ((lastNum != 0) &&
-            (metanephric_attract_moves <= MAX_METANEPHRIC_ATTRACT_MOVES)) {
-            ++metanephric_attract_moves;
-        }
+		if ((lastNum != 0) && (metanephric_attract_moves <= MAX_METANEPHRIC_ATTRACT_MOVES)) {
+			++metanephric_attract_moves;
+		}
 
-        /* loop over metanephric cells */
+		/* loop over metanephric cells */
 
-        for (i = 0; i < mCellTotal; ++i) {
-            docked = false;
-            mCell = getMetanephricCell(i);
-            x1 = mCell.getCoordX();
-            y1 = mCell.getCoordY();
-            bound = false;
-            checkAllMetanephricDistances(mCell);
+		for (i = 0; i < mCellTotal; ++i) {
+			docked = false;
+			mCell = getMetanephricCell(i);
+			x1 = mCell.getCoordX();
+			y1 = mCell.getCoordY();
+			bound = false;
+			checkAllMetanephricDistances(mCell);
 
-            /*  only consider attraction between normal cells of subtype LAST or bound metanephric and unbound umetanephric cells */
+			/*  only consider attraction between normal cells of subtype LAST or bound metanephric and unbound umetanephric cells */
 
-            if (mCell.getSubType() != SubTypes.LAST) {
-                dist = 100000.;
+			if (mCell.getSubType() != SubTypes.LAST) {
+				dist = 100000.;
 
-                if (lastNum != 0) {
-                    for (j = 0; j < lastNum; ++j) {
-                        tempCell = getLastCell(j);
-                        mAttract = false;
+				if (lastNum != 0) {
+					for (j = 0; j < lastNum; ++j) {
+						tempCell = getLastCell(j);
+						mAttract = false;
 
-                        /* maximum number of bound cells on this LAST cell, don't dock it */
-                        if (tempCell.getNumberOfAttractCells() >= MAX_ATTRACT) {
-                            continue;
-                            /* some metanephric cells are bound to this LAST cell */
-                        } else if (tempCell.getNumberOfAttractCells() != 0) {
-                            /* LAST cell */
-                            tempCell3 = tempCell;
-                            /* last metanephric cell bound to this LAST cell */
-                            tempCell = tempCell.getLastAttractCell();
-                            mAttract = true;
-                        }
+						/* maximum number of bound cells on this LAST cell, don't dock it */
+						if (tempCell.getNumberOfAttractCells() >= MAX_ATTRACT) {
+							continue;
+							/* some metanephric cells are bound to this LAST cell */
+						} else if (tempCell.getNumberOfAttractCells() != 0) {
+							/* LAST cell */
+							tempCell3 = tempCell;
+							/* last metanephric cell bound to this LAST cell */
+							tempCell = tempCell.getLastAttractCell();
+							mAttract = true;
+						}
 
-                        x2 = tempCell.getCoordX();
-                        y2 = tempCell.getCoordY();
-   
-        
-                        mincos2 = 0;
-                        minsin2 = 0;
-                        
-                        if (mAttract == true) {
-                            mincos2 = Math.cos(tempCell.getMangle()*DTR);
-                            minsin2 = Math.sin(tempCell.getMangle()*DTR);
+						x2 = tempCell.getCoordX();
+						y2 = tempCell.getCoordY();
 
-                        }
 
-                        dx = (x2 - (ELLIPSE_MAJOR/2)*minsin2) - x1;
-                        dy = (y2 - (ELLIPSE_MAJOR/2)*mincos2) - y1;
+						mincos2 = 0;
+						minsin2 = 0;
 
-                        dxm = x2 - x1;
-                        dym = y2 - y1;
+						if (mAttract == true) {
+							mincos2 = Math.cos(tempCell.getMangle() * DTR);
+							minsin2 = Math.sin(tempCell.getMangle() * DTR);
 
-                        dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
-                            didTransform);
-                        dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
-                            didTransform);
-  
+						}
 
-                        alignAngle = getCalculatedAngle(dxp, dyp);
-                        alignAngle /= DTR;
-                        
-                        mCell.setMangle(alignAngle);
+						dx = (x2 - (ELLIPSE_MAJOR / 2) * minsin2) - x1;
+						dy = (y2 - (ELLIPSE_MAJOR / 2) * mincos2) - y1;
 
-                        
-                        mincos1 = Math.cos(mCell.getMangle()*DTR);
-                        minsin1 = Math.sin(mCell.getMangle()*DTR);
+						dxm = x2 - x1;
+						dym = y2 - y1;
 
-                        dx -=  (ELLIPSE_MAJOR/2)*minsin1;
-			dy -=  (ELLIPSE_MAJOR/2)*mincos1;
+						dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
+						didTransform);
+						dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
+						didTransform);
 
-                        dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
-                            didTransform);
-                        dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
-                            didTransform);
 
-                        distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
-                        distTempNP = Math.sqrt((dx * dx) + (dy * dy));
-                        distTempM = Math.sqrt((dxm * dxm) + (dym * dym));
-  
-                        if (mAttract == true) {
-/*
+						alignAngle = getCalculatedAngle(dxp, dyp);
+						alignAngle /= DTR;
+
+						mCell.setMangle(alignAngle);
+
+
+						mincos1 = Math.cos(mCell.getMangle() * DTR);
+						minsin1 = Math.sin(mCell.getMangle() * DTR);
+
+						dx -= (ELLIPSE_MAJOR / 2) * minsin1;
+						dy -= (ELLIPSE_MAJOR / 2) * mincos1;
+
+						dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
+						didTransform);
+						dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
+						didTransform);
+
+						distTemp = Math.sqrt((dxp * dxp) + (dyp * dyp));
+						distTempNP = Math.sqrt((dx * dx) + (dy * dy));
+						distTempM = Math.sqrt((dxm * dxm) + (dym * dym));
+
+						if (mAttract == true) {
+							/*
                            cCell = checkMetanephricDistances(mCell);
                            if(cCell != null)
                            {
                                System.out.println("!!!!! RANDOM MOVE COLLISION BETWEEN " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " AND " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cCell));
                            }
 */
-                           dx +=  (ELLIPSE_MAJOR/2)*minsin1;
-			   dy +=  (ELLIPSE_MAJOR/2)*mincos1;
-                           mincos1 = Math.cos((tempCell.getMangle()+ANGLE_DEVIATION)*DTR);
-                           minsin1 = Math.sin((tempCell.getMangle()+ANGLE_DEVIATION)*DTR);
-                           mCell.setMangle(tempCell.getMangle()+ANGLE_DEVIATION);
-                           dx -=  (ELLIPSE_MAJOR/2)*minsin1;
-                           dy -=  (ELLIPSE_MAJOR/2)*mincos1;
-                        }
+							dx += (ELLIPSE_MAJOR / 2) * minsin1;
+							dy += (ELLIPSE_MAJOR / 2) * mincos1;
+							mincos1 = Math.cos((tempCell.getMangle() + ANGLE_DEVIATION) * DTR);
+							minsin1 = Math.sin((tempCell.getMangle() + ANGLE_DEVIATION) * DTR);
+							mCell.setMangle(tempCell.getMangle() + ANGLE_DEVIATION);
+							dx -= (ELLIPSE_MAJOR / 2) * minsin1;
+							dy -= (ELLIPSE_MAJOR / 2) * mincos1;
+						}
 
-/*
+						/*
                         if ( (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41)) {
                         System.out.println("DOCK #######  DX   DX " + dx + " DY " + dy); 
                         }
 */
 
 
-                        /*  if distance between metanephric cell and LAST cell or a bound metanephric cell */
-                        /*  is small enough, dock it */
+						/*  if distance between metanephric cell and LAST cell or a bound metanephric cell */
+						/*  is small enough, dock it */
 
-                        
-                        /*
+
+						/*
                         if ( (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) && (tempCell.getCellNumber() == 87)) {
                             System.out.println("DOCK DISTANCE 41 FROM 87 " + distTemp);                             
                         }
-                        */ 
+                        */
 
-                        if (distTemp < DOCKING_DISTANCE) {
-                        /*
+						if (distTemp < DOCKING_DISTANCE) {
+							/*
                         if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
                         {
                             System.out.println("DOCK MINCOS1 " + mincos1 + " MINSIN1 " + minsin1);
@@ -1007,45 +998,40 @@ public class CellSimulation {
                                 System.out.println("DOCK ######       DISTANCE OF MCELL 41 from METANEPHRIC CELL "  + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell) + " is " + distTemp);
                          }
                          */
-                            mCell.setSubType(SubTypes.LAST);
+							mCell.setSubType(SubTypes.LAST);
 
-                            /* bound to a LAST cell */
-                            if (tempCell.getType() == Types.NORMAL) {
-                                tempCell.addAttractCells(mCell);
-                                mCell.setBoundCell(tempCell);
-                                mCell.setNormalBoundCell(tempCell);
-                                /* bound to another metaneprhic cell  */
-                            } else if (tempCell.getType() == Types.METANEPHRIC) {
-                                tempCell3.addAttractCells(mCell);
-                                mCell.setNormalBoundCell(tempCell3);
-                                mCell.setBoundCell(tempCell);
-                                if (debug)
-                                    System.out.println(mCell.getDock(0) + " " +
-                                        mCell.getDock(1));
-                                if (debug)
-                                    System.out.println(tempCell.getDock(0) + " " + tempCell.getDock(1));
-                                if(distTempM < METANEPHRIC_WIDTH)
-                                System.out.println("!!!!! Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " COLLISION NUMBER WITH CELL NUMBER  " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
-                                  
-                                System.out.print("Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " BOUND TO: ");
-                                Cell xCell = tempCell.getBoundCell();
-                                while ( xCell != null  && xCell.getType() == Types.METANEPHRIC)
-                                {
-                                     System.out.print(AllCells[Types.METANEPHRIC.ordinal()].indexOf(xCell) + " ");
-                                     xCell = xCell.getBoundCell();
-                                }
-                                System.out.println();
-                            } else {
-                                System.err.println("Error wrong type of cell");
-                                System.exit(-1);
-                            }
+							/* bound to a LAST cell */
+							if (tempCell.getType() == Types.NORMAL) {
+								tempCell.addAttractCells(mCell);
+								mCell.setBoundCell(tempCell);
+								mCell.setNormalBoundCell(tempCell);
+								/* bound to another metaneprhic cell  */
+							} else if (tempCell.getType() == Types.METANEPHRIC) {
+								tempCell3.addAttractCells(mCell);
+								mCell.setNormalBoundCell(tempCell3);
+								mCell.setBoundCell(tempCell);
+								if (debug) System.out.println(mCell.getDock(0) + " " + mCell.getDock(1));
+								if (debug) System.out.println(tempCell.getDock(0) + " " + tempCell.getDock(1));
+								if (distTempM < METANEPHRIC_WIDTH) System.out.println("!!!!! Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " COLLISION NUMBER WITH CELL NUMBER  " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
 
-                            
-                            coords[0] = dx;
-                            coords[1] = dy;
-                            coords[2] = 0.;
-                            mCell.setCoords(Transform.translate(mCell.getCoords(),coords));
-                            /*
+								System.out.print("Cell No. " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " BOUND TO: ");
+								Cell xCell = tempCell.getBoundCell();
+								while (xCell != null && xCell.getType() == Types.METANEPHRIC) {
+									System.out.print(AllCells[Types.METANEPHRIC.ordinal()].indexOf(xCell) + " ");
+									xCell = xCell.getBoundCell();
+								}
+								System.out.println();
+							} else {
+								System.err.println("Error wrong type of cell");
+								System.exit(-1);
+							}
+
+
+							coords[0] = dx;
+							coords[1] = dy;
+							coords[2] = 0.;
+							mCell.setCoords(Transform.translate(mCell.getCoords(), coords));
+							/*
                             if ( AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41 )
                             {
                                 System.out.println("#######     MCELL 41 COORDINATES  AFTER"  + mCell.getCoordX() + " " + mCell.getCoordY());
@@ -1054,786 +1040,753 @@ public class CellSimulation {
                                 System.out.println("#######     MCELL 41 DIFF"  + Math.sqrt(xdiff*xdiff+ydiff*ydiff));
                             }
                             */
-                            
-                            mCell.setDock(tempCell.getCoordX(), tempCell.getCoordX(), 0);
 
-                            /*
+							mCell.setDock(tempCell.getCoordX(), tempCell.getCoordX(), 0);
+
+							/*
                             if (tempCell.getType() == Types.NORMAL && (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) )
                                 System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO NORMAL CELL " + tempCell.getCellNumber());
                             */
-                            //else
-                             //   System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
+							//else
+							//   System.out.println("MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " DOCKED TO MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempCell));
 
-                            /* when a metanephric cell docks, create a new one */
+							/* when a metanephric cell docks, create a new one */
 
-                            x4 = (iter * .7 * (-0.5 + random.nextDouble())) / getCellSkip();
-                            y4 = (iter * .7 * random.nextDouble()) / getCellSkip();
-                            newmCell = new Cell(x4, getFraction() + y4, 0.,
-                                Types.METANEPHRIC, SubTypes.NORMAL);
-                            newmCell.setAddedType(AddedType.ADDED);
-                            AllCells[Types.METANEPHRIC.ordinal()].addElement(newmCell);
+							x4 = (iter * .7 * (-0.5 + random.nextDouble())) / getCellSkip();
+							y4 = (iter * .7 * random.nextDouble()) / getCellSkip();
+							newmCell = new Cell(x4, getFraction() + y4, 0.,
+							Types.METANEPHRIC, SubTypes.NORMAL);
+							newmCell.setAddedType(AddedType.ADDED);
+							AllCells[Types.METANEPHRIC.ordinal()].addElement(newmCell);
 
-                            if (tempCell.getType() == Types.NORMAL) {
-                                if (debug)
-                                    System.out.println("MCELL # " +
-                                        AllCells[Types.METANEPHRIC.ordinal()].indexOf(
-                                            mCell) + " bound to Normal cell " +
-                                        tempCell);
-                            } else {
-                                if (debug)
-                                    System.out.println("MCELL # " +
-                                        AllCells[Types.METANEPHRIC.ordinal()].indexOf(
-                                            mCell) + " bound to Normal cell " +
-                                        tempCell3 + " next to MCELL " +
-                                        AllCells[Types.METANEPHRIC.ordinal()].indexOf(
-                                            tempCell));
-                            }
+							if (tempCell.getType() == Types.NORMAL) {
+								if (debug) System.out.println("MCELL # " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(
+								mCell) + " bound to Normal cell " + tempCell);
+							} else {
+								if (debug) System.out.println("MCELL # " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(
+								mCell) + " bound to Normal cell " + tempCell3 + " next to MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(
+								tempCell));
+							}
 
-                            if (debug)
-                                System.out.println("MCELL DOCK " +
-                                    mCell.getDock(0) + " " + mCell.getDock(1) +
-                                    " DOCKED AT " + tempCell.getDock(0) + " " +
-                                    tempCell.getDock(1));
+							if (debug) System.out.println("MCELL DOCK " + mCell.getDock(0) + " " + mCell.getDock(1) +
+								" DOCKED AT " + tempCell.getDock(0) + " " + tempCell.getDock(1));
 
-                            bound = true;
+							bound = true;
 
-                            break;
-                        }
-                        else if (distTemp < dist) {
-                            dist = distTemp;
-                            xmin = x2;
-                            ymin = y2;
-                            tempMinCell = tempCell;
-                        }
-                    }
+							break;
+						} else if (distTemp < dist) {
+							dist = distTemp;
+							xmin = x2;
+							ymin = y2;
+							tempMinCell = tempCell;
+						}
+					}
 
-                    /* if not bound move metanephric cell towards nearest LAST cell */
+					/* if not bound move metanephric cell towards nearest LAST cell */
 
-                    if ((dist < 100000.) &&
-                        (metanephric_attract_moves < MAX_METANEPHRIC_ATTRACT_MOVES) && !bound) {
+					if ((dist < 100000.) && (metanephric_attract_moves < MAX_METANEPHRIC_ATTRACT_MOVES) && !bound) {
 
-                        minsin2 = 0;
-                        mincos2 = 0;
-                        if (mAttract == true) {
-                            mincos2 = Math.cos(tempMinCell.getMangle()*DTR);
-                            minsin2 = Math.sin(tempMinCell.getMangle()*DTR);
+						minsin2 = 0;
+						mincos2 = 0;
+						if (mAttract == true) {
+							mincos2 = Math.cos(tempMinCell.getMangle() * DTR);
+							minsin2 = Math.sin(tempMinCell.getMangle() * DTR);
 
-                        }
-                        dx = xmin - (ELLIPSE_MAJOR/2)*minsin2 - x1;
-                        dy = ymin - (ELLIPSE_MAJOR/2)*mincos2 - y1;
+						}
+						dx = xmin - (ELLIPSE_MAJOR / 2) * minsin2 - x1;
+						dy = ymin - (ELLIPSE_MAJOR / 2) * mincos2 - y1;
 
 
-                        /* take into account peridic boundary conditions */
+						/* take into account peridic boundary conditions */
 
-                        dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
-                            didTransform);
+						dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,
+						didTransform);
 
-                        dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
-                            didTransform);
+						dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC,
+						didTransform);
 
-                        coords[0] = 0.;
-                        coords[1] = .1;
-                        coords[2] = 0.;
-                        alignAngle = getCalculatedAngle(dxp, dyp);
-                        alignAngle /= DTR;
+						coords[0] = 0.;
+						coords[1] = .1;
+						coords[2] = 0.;
+						alignAngle = getCalculatedAngle(dxp, dyp);
+						alignAngle /= DTR;
 
-                        /* angle towards LAST cell */
+						/* angle towards LAST cell */
 
-                        coords = Transform.rotateZ(alignAngle * DTR, coords);
-                        ranAngle = 0;
-                        //                      ranAngle = getRandomAngle();
+						coords = Transform.rotateZ(alignAngle * DTR, coords);
+						ranAngle = 0;
+						//                      ranAngle = getRandomAngle();
 
-                        /* perturb by a random angle */
+						/* perturb by a random angle */
 
-                        coords = Transform.rotateZ(ranAngle * DTR, coords);
-                        mCell.setMangle(alignAngle + ranAngle);
-                        mCell.setCoords(Transform.translate(mCell.getCoords(),
-                            coords));
-                        mCell.setCoords(periodicCoords(mCell.getCoords(),
-                            didTransform, mCell.getCellNumber()));
+						coords = Transform.rotateZ(ranAngle * DTR, coords);
+						mCell.setMangle(alignAngle + ranAngle);
+						mCell.setCoords(Transform.translate(mCell.getCoords(),
+						coords));
+						mCell.setCoords(periodicCoords(mCell.getCoords(),
+						didTransform, mCell.getCellNumber()));
 
-                        if (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) {
-                            System.out.println("NOT DOCK NORMAL MOVE MCELL 41 COORDS  " + mCell.getCoords()[0] + " " + mCell.getCoords()[1]);
-                        }
-                        if (mAttract) {
-                            mCell.setTestCell(tempMinCell);
-                            // System.out.println("\nCOORD TEMP_MIN_CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
-                            // System.out.println("COORD ATTRACTING " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell));
-                            // System.out.println("COORDS ANGLE " + mCell.getMangle());
-                            // System.out.println("ATTRACT TOWARDS DOCKED CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
+						if (AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) == 41) {
+							System.out.println("NOT DOCK NORMAL MOVE MCELL 41 COORDS  " + mCell.getCoords()[0] + " " + mCell.getCoords()[1]);
+						}
+						if (mAttract) {
+							mCell.setTestCell(tempMinCell);
+							// System.out.println("\nCOORD TEMP_MIN_CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
+							// System.out.println("COORD ATTRACTING " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell));
+							// System.out.println("COORDS ANGLE " + mCell.getMangle());
+							// System.out.println("ATTRACT TOWARDS DOCKED CELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
 
-                            // System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS DOCKED MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
-                        } else
-                            // System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS LAST CELL " + tempMinCell.getCellNumber());
-                        if (didTransform.tf) {
-                            if (mCell.getPeriodicType() == PeriodicType.NORMAL) {
-                                mCell.setPeriodicType(PeriodicType.CROSSED);
-                            } else if (mCell.getPeriodicType() == PeriodicType.CROSSED) {
-                                mCell.setPeriodicType(PeriodicType.NORMAL);
-                            }
-                        }
-                    }
-                    /* no LAST cells, random movement only */
-                } else if (metanephric_attract_moves <= MAX_METANEPHRIC_ATTRACT_MOVES) {
-                    // System.out.println("ATTRACT_MOVES #2 ");
-                    for (i = 0; i < mCellTotal; ++i) {
-                        debug = false;
-                        mCell = getMetanephricCell(i);
+							// System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS DOCKED MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(tempMinCell));
+						} else
+						// System.out.println("ROTATE MCELL " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " TOWARDS LAST CELL " + tempMinCell.getCellNumber());
+						if (didTransform.tf) {
+							if (mCell.getPeriodicType() == PeriodicType.NORMAL) {
+								mCell.setPeriodicType(PeriodicType.CROSSED);
+							} else if (mCell.getPeriodicType() == PeriodicType.CROSSED) {
+								mCell.setPeriodicType(PeriodicType.NORMAL);
+							}
+						}
+					}
+					/* no LAST cells, random movement only */
+				} else if (metanephric_attract_moves <= MAX_METANEPHRIC_ATTRACT_MOVES) {
+					// System.out.println("ATTRACT_MOVES #2 ");
+					for (i = 0; i < mCellTotal; ++i) {
+						debug = false;
+						mCell = getMetanephricCell(i);
 
-                        if (mCell.getSubType() != SubTypes.LAST) {
-                            r = random.nextDouble();
-                            theta = 360 * DTR * random.nextDouble();
+						if (mCell.getSubType() != SubTypes.LAST) {
+							r = random.nextDouble();
+							theta = 360 * DTR * random.nextDouble();
 
-                            if (debug) {
-                                System.out.println("PERIODIC COORDS Initial " +
-                                    mCell.getCoords()[0] + " " +
-                                    mCell.getCoords()[1]);
-                            }
+							if (debug) {
+								System.out.println("PERIODIC COORDS Initial " + mCell.getCoords()[0] + " " + mCell.getCoords()[1]);
+							}
 
-                            mCell.setCoords(Transform.translate(
-                                mCell.getCoords(), r * Math.cos(theta),
-                                r * Math.sin(theta), 0.));
-                            mCell.setCoords(periodicCoords(mCell.getCoords(),
-                                didTransform, mCell.getCellNumber()));
+							mCell.setCoords(Transform.translate(
+							mCell.getCoords(), r * Math.cos(theta),
+							r * Math.sin(theta), 0.));
+							mCell.setCoords(periodicCoords(mCell.getCoords(),
+							didTransform, mCell.getCellNumber()));
 
-                            if (didTransform.tf) {
-                                if (mCell.getPeriodicType() == PeriodicType.NORMAL) {
-                                    mCell.setPeriodicType(PeriodicType.CROSSED);
-                                } else if (mCell.getPeriodicType() == PeriodicType.CROSSED) {
-                                    mCell.setPeriodicType(PeriodicType.NORMAL);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+							if (didTransform.tf) {
+								if (mCell.getPeriodicType() == PeriodicType.NORMAL) {
+									mCell.setPeriodicType(PeriodicType.CROSSED);
+								} else if (mCell.getPeriodicType() == PeriodicType.CROSSED) {
+									mCell.setPeriodicType(PeriodicType.NORMAL);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
-    /** run the whole simulation (currently not called by driver program) **/
-    public void runSimulation() {
-        int i;
-        int j;
-        int initSize;
+	/** run the whole simulation (currently not called by driver program) **/
+	public void runSimulation() {
+		int i;
+		int j;
+		int initSize;
 
-        for (i = 0; i < iter; ++i) {
-            // System.out.println("Iter " + i);
-            updateSimulation(Render.PRINT, i);
-        }
-    }
+		for (i = 0; i < iter; ++i) {
+			// System.out.println("Iter " + i);
+			updateSimulation(Render.PRINT, i);
+		}
+	}
 
-    /** update the simulation one step at a time  **/
-    public void updateSimulation(Render render, int currentIter) {
-        int j;
-        int initSize;
-        initSize = getNormalCellTotal();
+	/** update the simulation one step at a time  **/
+	public void updateSimulation(Render render, int currentIter) {
+		int j;
+		int initSize;
+		initSize = getNormalCellTotal();
 
-        if (currentIter == 0) {
-            cellGrowthCount = 0;
-        }
+		if (currentIter == 0) {
+			cellGrowthCount = 0;
+		}
 
-        if (currentIter == START_METANEPHRIC_CELLS) {
-            placeMetanephricCells();
-            placeAttractiveCells();
-        }
+		if (currentIter == START_METANEPHRIC_CELLS) {
+			placeMetanephricCells();
+			placeAttractiveCells();
+		}
 
-        if (((currentIter % getCellSkip()) == 0) && (currentIter < getIter())) {
-            ++cellGrowthCount;
+		System.out.println("##$$## currentIter " + currentIter);
+		if (((currentIter % getCellSkip()) == 0) && (currentIter < getIter())) {
+			++cellGrowthCount;
+			System.out.println("initSize " + initSize);
 
-            /* loop over all normal cells: grow new ones */
-            for (j = 0; j < initSize; ++j)
-                currentAlgorithm((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(j));
+			/* loop over all normal cells: grow new ones */
+			for (j = 0; j < initSize; ++j)
+			currentAlgorithm((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(j));
 
-            setStepLength(getStepLength() * getFraction());
-            setBranchStepLength(getBranchStepLength() * getFraction());
-            if ((cellGrowthCount * getCellSkip()) == iter) {
-                updateLastCellList();
-            }
-        }
+			setStepLength(getStepLength() * getFraction());
+			setBranchStepLength(getBranchStepLength() * getFraction());
+			if ((cellGrowthCount * getCellSkip()) == iter) {
+				updateLastCellList();
+			}
+		}
 
-        // System.out.println("CURRENTITER " + currentIter);
+		// System.out.println("CURRENTITER " + currentIter);
 
-        /* move metanephric cells */
-        if (currentIter > START_METANEPHRIC_CELLS) {
-            if (debug)
-                System.out.println("IN MOVEMETANEPHRIC CELLS " + ++updateCount);
-            moveMetanenephricCells();
-        }
+		/* move metanephric cells */
+		if (currentIter > START_METANEPHRIC_CELLS) {
+			if (debug) System.out.println("IN MOVEMETANEPHRIC CELLS " + ++updateCount);
+			moveMetanenephricCells();
+		}
 
-        if (render == Render.PRINT) {
-            printSimulationStep();
-        }
+		if (render == Render.PRINT) {
+			printSimulationStep();
+		}
 
 
-        // System.out.println();
-    }
+		// System.out.println();
+	}
 
-    /**
+	/**
       algorithm for growing normal cells
      **/
-    private void currentAlgorithm(Cell cell) {
-        int number;
-        int direction;
-        int i;
-        int j;
-        // System.out.println(" ALGORITHM ITER " + cellGrowthCount + " CELL NUMBER " + cell.getCellNumber());
+	private void currentAlgorithm(Cell cell) {
+		int number;
+		int direction;
+		int i;
+		int j;
+		System.out.println(" ALGORITHM ITER " + cellGrowthCount + " CELL NUMBER " + cell.getCellNumber() + " SubType " + cell.getSubType());
 
-        switch (cell.getSubType()) {
-        case NORMAL:
-            break;
+		switch (cell.getSubType()) {
+			case NORMAL:
+				break;
 
-        case MAIN_R:
-        case MAIN_L:
-        case MAIN_C:
-        case MAIN:
-            /* randomly pick one or 2 cells to grow out of MAIN cell */
-            number = (int)(random.nextDouble() * getMaxBranch()) + 1;
+			case MAIN_R:
+			case MAIN_L:
+			case MAIN_C:
+			case MAIN:
+				/* randomly pick one or 2 cells to grow out of MAIN cell */
+				number = (int)(random.nextDouble() * getMaxBranch()) + 1;
 
-            if (cellGrowthCount == 2) {
-                number = 2;
-            }
+				if (cellGrowthCount == 2) {
+					number = 2;
+				}
 
-            if ((cellGrowthCount > 2) && cell.getCellNumber() <= 3) {
-                return;
-            }
+				if ((cellGrowthCount > 2) && cell.getCellNumber() <= 3) {
+					return;
+				}
 
-            if (cell.getLinkCellDown() == null) {
-                number = 1;
-            }
+				if (cell.getLinkCellDown() == null) {
+					number = 1;
+				}
 
-            for (i = 0; i < number; ++i) {
-                // System.out.println("MAIN CELL " + cell.getSubType());
-                if (cell.getGrowthCount() < getMaxBranch()) {
+				for (i = 0; i < number; ++i) {
+					// System.out.println("MAIN CELL " + cell.getSubType());
+					if (cell.getGrowthCount() < getMaxBranch()) {
 
-                    /* grow a new cell */
+						/* grow a new cell */
 
-                    placeNewCell(cell, new Cell(cell, SubTypes.END, cell), i);
+						System.out.println("##$$##  1 CALL placeNewCell");
+						placeNewCell(cell, new Cell(cell, SubTypes.END, cell), i);
 
-                    // System.out.println("SWITCH TO CELL TYPE " + cell.getSubType());
-                    if ((cell.getSubType() == SubTypes.NORMAL) ||
-                        (cell.getSubType() == SubTypes.INTERMEDIATE)) {
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
+						// System.out.println("SWITCH TO CELL TYPE " + cell.getSubType());
+						if ((cell.getSubType() == SubTypes.NORMAL) || (cell.getSubType() == SubTypes.INTERMEDIATE)) {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
 
-            break;
+				break;
 
-        case END:
-        case INTERMEDIATE:
+			case END:
+			case INTERMEDIATE:
 
-            /* randomly pick one or 2 cells to grow out of END or INTERMEDIATE cell */
+				/* randomly pick one or 2 cells to grow out of END or INTERMEDIATE cell */
 
-            number = (int)(random.nextDouble() * getMaxBranch()) + 1;
+				number = (int)(random.nextDouble() * getMaxBranch()) + 1;
 
-            if (cellGrowthCount == 2) {
-                number = 2;
-            }
+				if (cellGrowthCount == 2) {
+					number = 2;
+				}
 
-            if ((cellGrowthCount > 2) && cell.getCellNumber() <= 3) {
-                return;
-            }
+				if ((cellGrowthCount > 2) && cell.getCellNumber() <= 3) {
+					return;
+				}
 
-            if (cell.getLinkCellDown() == null) {
-                number = 1;
-            }
+				if (cell.getLinkCellDown() == null) {
+					number = 1;
+				}
 
-            if (debug)
-                System.out.println("CELLGROWTHCOUNT*SKIP " +
-                    (cellGrowthCount * getCellSkip()) + " ITER " + (iter - 1));
+				if (debug) System.out.println("CELLGROWTHCOUNT*SKIP " + (cellGrowthCount * getCellSkip()) + " ITER " + (iter - 1));
 
-            if (((cellGrowthCount * getCellSkip()) >= iter) &&
-                (cell.getSubType() == SubTypes.END)) {
-                for (i = 0; i < 2; ++i) {
-                    if (cell.getGrowthCount() < getMaxIntermediateBranch()) {
-                        placeNewCell(cell, new Cell(cell, SubTypes.LAST, cell),
-                            i);
-                    } else {
-                        break;
-                    }
-                }
-            } else {
-                for (i = 0; i < number; ++i) {
-                    if (cell.getGrowthCount() < getMaxIntermediateBranch()) {
-                        placeNewCell(cell, new Cell(cell, SubTypes.END, cell), i);
-                    } else {
-                        break;
-                    }
-                }
-            }
+				if (((cellGrowthCount * getCellSkip()) >= iter) && (cell.getSubType() == SubTypes.END)) {
+					for (i = 0; i < 2; ++i) {
+						if (cell.getGrowthCount() < getMaxIntermediateBranch()) {
+							System.out.println("##$$##  2 CALL placeNewCell");
+							placeNewCell(cell, new Cell(cell, SubTypes.LAST, cell),
+							i);
+						} else {
+							break;
+						}
+					}
+				} else {
+					for (i = 0; i < number; ++i) {
+						if (cell.getGrowthCount() < getMaxIntermediateBranch()) {
+							System.out.println("##$$##  3 CALL placeNewCell");
+							placeNewCell(cell, new Cell(cell, SubTypes.END, cell), i);
+						} else {
+							break;
+						}
+					}
+				}
 
-            break;
-        }
-    }
+				break;
+		}
+	}
 
-    /**
+	/**
      normalized vector between the coordinates of 2 cells
      **/
-    private double scaleFactor(Cell c1, Cell c2) {
-        return (Math.sqrt(Math.pow((c2.getCoordX() - c1.getCoordX()), 2) +
-            Math.pow((c2.getCoordY() - c1.getCoordY()), 2) +
-            Math.pow((c2.getCoordZ() - c1.getCoordZ()), 2)));
-    }
+	private double scaleFactor(Cell c1, Cell c2) {
+		return (Math.sqrt(Math.pow((c2.getCoordX() - c1.getCoordX()), 2) + Math.pow((c2.getCoordY() - c1.getCoordY()), 2) + Math.pow((c2.getCoordZ() - c1.getCoordZ()), 2)));
+	}
 
-    /**
+	/**
        return the number of NORMAL cells
      **/
-    public int getNormalCellTotal() {
-        return (AllCells[Types.NORMAL.ordinal()].size());
-    }
+	public int getNormalCellTotal() {
+		return (AllCells[Types.NORMAL.ordinal()].size());
+	}
 
-    /**
+	/**
         return the index'th NORMAL cell 
      **/
-    public Cell getNormalCell(int index) {
-        return ((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(index));
-    }
+	public Cell getNormalCell(int index) {
+		return ((Cell) AllCells[Types.NORMAL.ordinal()].elementAt(index));
+	}
 
-    /**
+	/**
         return the index'th metanephric cell 
      **/
-    public Cell getMetanephricCell(int index) {
-        return ((Cell) AllCells[Types.METANEPHRIC.ordinal()].elementAt(index));
-    }
+	public Cell getMetanephricCell(int index) {
+		return ((Cell) AllCells[Types.METANEPHRIC.ordinal()].elementAt(index));
+	}
 
-    /**
+	/**
         return the index'th attractive cell 
      **/
-    public Cell getAttractiveCell(int index) {
-        return ((Cell) AllCells[Types.ATTRACTIVE.ordinal()].elementAt(index));
-    }
+	public Cell getAttractiveCell(int index) {
+		return ((Cell) AllCells[Types.ATTRACTIVE.ordinal()].elementAt(index));
+	}
 
-    /** redo last cell list **/
-    public void updateLastCellList() {
-        int i;
-        Cell cellTemp;
-        lastCells = new Vector();
+	/** redo last cell list **/
+	public void updateLastCellList() {
+		int i;
+		Cell cellTemp;
+		lastCells = new Vector();
 
-        for (i = 0; i < AllCells[Types.NORMAL.ordinal()].size(); ++i) {
-            cellTemp = (Cell) AllCells[Types.NORMAL.ordinal()].elementAt(i);
+		for (i = 0; i < AllCells[Types.NORMAL.ordinal()].size(); ++i) {
+			cellTemp = (Cell) AllCells[Types.NORMAL.ordinal()].elementAt(i);
 
-            if (cellTemp.getSubType() == SubTypes.LAST) {
-                lastCells.addElement(cellTemp);
-            }
-        }
-    }
+			if (cellTemp.getSubType() == SubTypes.LAST) {
+				lastCells.addElement(cellTemp);
+			}
+		}
+	}
 
-    /** return number of LAST cells */
-    public int getLastCellTotal() {
-        int i;
+	/** return number of LAST cells */
+	public int getLastCellTotal() {
+		int i;
 
-        if (lastCells != null) {
-            return (lastCells.size());
-        } else {
-            return (0);
-        }
-    }
+		if (lastCells != null) {
+			return (lastCells.size());
+		} else {
+			return (0);
+		}
+	}
 
-    /**
+	/**
         return the index'th LAST cell 
      **/
-    public Cell getLastCell(int index) {
-        if (lastCells != null) {
-            return ((Cell) lastCells.elementAt(index));
-        } else {
-            return ((Cell) null);
-        }
-    }
+	public Cell getLastCell(int index) {
+		if (lastCells != null) {
+			return ((Cell) lastCells.elementAt(index));
+		} else {
+			return ((Cell) null);
+		}
+	}
 
-    /**
+	/**
        return the number of metanephric cells
      **/
-    public int getMetanephricCellTotal() {
-        return (AllCells[Types.METANEPHRIC.ordinal()].size());
-    }
+	public int getMetanephricCellTotal() {
+		return (AllCells[Types.METANEPHRIC.ordinal()].size());
+	}
 
-    /**
+	/**
        return the number of attractive cells
      **/
-    public int getAttractiveCellTotal() {
-        return (AllCells[Types.ATTRACTIVE.ordinal()].size());
-    }
+	public int getAttractiveCellTotal() {
+		return (AllCells[Types.ATTRACTIVE.ordinal()].size());
+	}
 
-    /**
+	/**
            set the maximum number of cells that can grow out of an intermediate cell
      **/
-    public void setMaxIntermediateBranch(int branch) {
-        maxIntermediateBranch = branch;
-    }
+	public void setMaxIntermediateBranch(int branch) {
+		maxIntermediateBranch = branch;
+	}
 
-    /**
+	/**
        return the maximum number of cells that can grow out of an intermediate cell
      **/
-    public int getMaxIntermediateBranch() {
-        return (maxIntermediateBranch);
-    }
+	public int getMaxIntermediateBranch() {
+		return (maxIntermediateBranch);
+	}
 
-    /**
+	/**
        initialize metanephric cell positions randomly
      **/
-    private void placeMetanephricCells() {
-        int j;
-        double x;
-        double y;
+	private void placeMetanephricCells() {
+		int j;
+		double x;
+		double y;
 
-        for (j = 0; j < NUM_METANEPHRIC_CELLS; ++j) {
-            x = (iter * .7 * (-0.5 + random.nextDouble())) / getCellSkip();
-            y = (iter * .7 * random.nextDouble()) / getCellSkip();
-            AllCells[Types.METANEPHRIC.ordinal()].addElement(new Cell(x,
-                getFraction() + y, 0., Types.METANEPHRIC, SubTypes.NORMAL));
-        }
-    }
+		for (j = 0; j < NUM_METANEPHRIC_CELLS; ++j) {
+			x = (iter * .7 * (-0.5 + random.nextDouble())) / getCellSkip();
+			y = (iter * .7 * random.nextDouble()) / getCellSkip();
+			AllCells[Types.METANEPHRIC.ordinal()].addElement(new Cell(x,
+			getFraction() + y, 0., Types.METANEPHRIC, SubTypes.NORMAL));
+		}
+	}
 
-    /**
+	/**
        place attractive cells in an arc about the origin
      **/
-    private void placeAttractiveCells() {
-        double angle;
-        int j;
-        double x;
-        double y;
+	private void placeAttractiveCells() {
+		double angle;
+		int j;
+		double x;
+		double y;
 
-        for (j = 0, angle = 30; j < NUM_ATTRACTIVE_CELLS;
-            ++j, angle += (120 / NUM_ATTRACTIVE_CELLS)) {
-            x = attractiveRadius * Math.cos(angle * DTR);
-            y = attractiveRadius * Math.sin(angle * DTR);
-            AllCells[Types.ATTRACTIVE.ordinal()].addElement(new Cell(x, y, 0.,
-                Types.ATTRACTIVE, SubTypes.NORMAL));
+		for (j = 0, angle = 30; j < NUM_ATTRACTIVE_CELLS; ++j, angle += (120 / NUM_ATTRACTIVE_CELLS)) {
+			x = attractiveRadius * Math.cos(angle * DTR);
+			y = attractiveRadius * Math.sin(angle * DTR);
+			AllCells[Types.ATTRACTIVE.ordinal()].addElement(new Cell(x, y, 0.,
+			Types.ATTRACTIVE, SubTypes.NORMAL));
 
-        }
-    }
+		}
+	}
 
-    /**
-       return the angle for a coordinate relative the the y axis
+	/**
+       return the angle for a coordinate relative the the z axis
     **/
-    public static double getCalculatedAngle(double dx, double dy) {
-        double theta = 0.;
+	public static double getCalculatedAngle(double dx, double dy) {
+		double theta = 0.;
 
-        if ((dx >= 0) && (dy >= 0)) {
-            if (dy != 0) {
-                theta = Math.atan(dx / dy);
-            } else {
-                theta = Math.PI / 2.;
-            }
-        } else if ((dx >= 0) && (dy <= 0)) {
-            if (dx != 0) {
-                theta = Math.atan(dy / dx);
-                theta = (90 * DTR) - theta;
-            } else {
-                theta = Math.PI / 2.;
-            }
-        } else if ((dx <= 0) && (dy <= 0)) {
-            if (dx != 0) {
-                theta = Math.atan(dy / dx);
-                theta = (-90 * DTR) - theta;
-            } else {
-                theta = Math.PI / 2.;
-            }
-        } else if ((dx <= 0) && (dy >= 0)) {
-            if (dy != 0) {
-                theta = Math.atan(dx / dy);
-            } else {
-                theta = Math.PI / 2.;
-            }
-        }
+		if ((dx >= 0) && (dy >= 0)) {
+			if (dy != 0) {
+				theta = Math.atan(dx / dy);
+			} else {
+				theta = Math.PI / 2.;
+			}
+		} else if ((dx >= 0) && (dy <= 0)) {
+			if (dx != 0) {
+				theta = Math.atan(dy / dx);
+				theta = (90 * DTR) - theta;
+			} else {
+				theta = Math.PI / 2.;
+			}
+		} else if ((dx <= 0) && (dy <= 0)) {
+			if (dx != 0) {
+				theta = Math.atan(dy / dx);
+				theta = (-90 * DTR) - theta;
+			} else {
+				theta = Math.PI / 2.;
+			}
+		} else if ((dx <= 0) && (dy >= 0)) {
+			if (dy != 0) {
+				theta = Math.atan(dx / dy);
+			} else {
+				theta = Math.PI / 2.;
+			}
+		}
 
-        return (theta);
-    }
+		return (theta);
+	}
 
-    /**  return the number of cells between a cell and one of the main branches **/
+	/**  return the number of cells between a cell and one of the main branches **/
 
-    private int getNumCellsToMain(Cell cell) {
-        Vector trace;
-        Cell cellTemp;
-        int count = 0;
-        int i;
-        trace = cell.traceCellDown();
+	private int getNumCellsToMain(Cell cell) {
+		Vector trace;
+		Cell cellTemp;
+		int count = 0;
+		int i;
+		trace = cell.traceCellDown();
 
-        if ((cell.getSubType() == SubTypes.MAIN_R) ||
-            (cell.getSubType() == SubTypes.MAIN_L) ||
-            (cell.getSubType() == SubTypes.MAIN_C) ||
-            (cell.getSubType() == SubTypes.MAIN)) {
-            return (0);
-        }
+		if ((cell.getSubType() == SubTypes.MAIN_R) || (cell.getSubType() == SubTypes.MAIN_L) || (cell.getSubType() == SubTypes.MAIN_C) || (cell.getSubType() == SubTypes.MAIN)) {
+			return (0);
+		}
 
-        for (i = 0; i < trace.size(); ++i) {
-            cellTemp = (Cell) trace.elementAt(i);
+		for (i = 0; i < trace.size(); ++i) {
+			cellTemp = (Cell) trace.elementAt(i);
 
-            if ((cellTemp.getSubType() == SubTypes.MAIN_R) ||
-                (cellTemp.getSubType() == SubTypes.MAIN_L) ||
-                (cell.getSubType() == SubTypes.MAIN_C) ||
-                (cellTemp.getSubType() == SubTypes.MAIN)) {
-                return (count);
-            } else {
-                ++count;
-            }
-        }
+			if ((cellTemp.getSubType() == SubTypes.MAIN_R) || (cellTemp.getSubType() == SubTypes.MAIN_L) || (cell.getSubType() == SubTypes.MAIN_C) || (cellTemp.getSubType() == SubTypes.MAIN)) {
+				return (count);
+			} else {
+				++count;
+			}
+		}
 
-        return (count);
-    }
+		return (count);
+	}
 
-    /** sort distances in increasing order between one normal cell and one attractive cell **/
+	/** sort distances in increasing order between one normal cell and one attractive cell **/
 
-    private void sortThem(Vector distVec) {
-        DistNo temp1;
-        DistNo temp2;
-        int i;
-        int j;
+	private void sortThem(Vector distVec) {
+		DistNo temp1;
+		DistNo temp2;
+		int i;
+		int j;
 
-        for (i = 0; i < (distVec.size() - 1); ++i) {
-            for (j = i + 1; j < distVec.size(); ++j) {
-                temp1 = (DistNo) distVec.elementAt(i);
-                temp2 = (DistNo) distVec.elementAt(j);
+		for (i = 0; i < (distVec.size() - 1); ++i) {
+			for (j = i + 1; j < distVec.size(); ++j) {
+				temp1 = (DistNo) distVec.elementAt(i);
+				temp2 = (DistNo) distVec.elementAt(j);
 
-                if (temp2.getDist() < temp1.getDist()) {
-                    distVec.remove(j);
-                    distVec.insertElementAt(temp1, j);
-                    distVec.remove(i);
-                    distVec.insertElementAt(temp2, i);
-                }
-            }
-        }
-    }
-    public void checkAllMetanephricDistances(Cell mCell)
-    {
-       double dx,dy,dz;
-       double dist2;
-       double dxp,dyp;
-       Boolean didTransform = new Boolean(false);
-       int cellNum;
-       double compare=METANEPHRIC_WIDTH*METANEPHRIC_WIDTH;
-       Cell cell1 = null;
-       for (cellNum = 0; cellNum < getMetanephricCellTotal(); ++cellNum) {
-            cell1 = getMetanephricCell(cellNum);
-            if ( ! mCell.equals(cell1) )
-            {
-               dx   = mCell.getCoordX() - cell1.getCoordX();;
-               dy   = mCell.getCoordY() - cell1.getCoordY();;
-               dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,didTransform);
-               dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC, didTransform);
-               dist2 = dxp*dxp+dyp*dyp;
-               if(dist2 < compare)
-               {
-                 System.out.println("!! DISTANCE " + Math.sqrt(dx*dx+dy*dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
-               }
-            }
-       }
-    }
-    public Cell checkMetanephricDistances(Cell mCell)
-    {
-       double dx,dy,dz;
-       double dxp,dyp;
-       double dist2;
-       int cellNum;
-       Boolean didTransform = new Boolean(false);
-       double compare=METANEPHRIC_WIDTH*METANEPHRIC_WIDTH;
-       Cell cell1 = null;
-       for (cellNum = 0; cellNum < getMetanephricCellTotal(); ++cellNum) {
-            cell1 = getMetanephricCell(cellNum);
-            if ( ! mCell.equals(cell1) )
-            {
-               dx   = mCell.getCoordX() - cell1.getCoordX();;
-               dy   = mCell.getCoordY() - cell1.getCoordY();;
-               dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC,didTransform);
-               dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC, didTransform);
-               dist2 = dxp*dxp+dyp*dyp;
-               if(dist2 < compare)
-               {
-                 System.out.println("!! DISTANCE " + Math.sqrt(dx*dx+dy*dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
-                 return(cell1);
-               }
-            }
-       }
-       return(cell1);
-    }
+				if (temp2.getDist() < temp1.getDist()) {
+					distVec.remove(j);
+					distVec.insertElementAt(temp1, j);
+					distVec.remove(i);
+					distVec.insertElementAt(temp2, i);
+				}
+			}
+		}
+	}
+	public void checkAllMetanephricDistances(Cell mCell) {
+		double dx, dy, dz;
+		double dist2;
+		double dxp, dyp;
+		Boolean didTransform = new Boolean(false);
+		int cellNum;
+		double compare = METANEPHRIC_WIDTH * METANEPHRIC_WIDTH;
+		Cell cell1 = null;
+		for (cellNum = 0; cellNum < getMetanephricCellTotal(); ++cellNum) {
+			cell1 = getMetanephricCell(cellNum);
+			if (!mCell.equals(cell1)) {
+				dx = mCell.getCoordX() - cell1.getCoordX();;
+				dy = mCell.getCoordY() - cell1.getCoordY();;
+				dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC, didTransform);
+				dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC, didTransform);
+				dist2 = dxp * dxp + dyp * dyp;
+				if (dist2 < compare) {
+					System.out.println("!! DISTANCE " + Math.sqrt(dx * dx + dy * dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
+				}
+			}
+		}
+	}
+	public Cell checkMetanephricDistances(Cell mCell) {
+		double dx, dy, dz;
+		double dxp, dyp;
+		double dist2;
+		int cellNum;
+		Boolean didTransform = new Boolean(false);
+		double compare = METANEPHRIC_WIDTH * METANEPHRIC_WIDTH;
+		Cell cell1 = null;
+		for (cellNum = 0; cellNum < getMetanephricCellTotal(); ++cellNum) {
+			cell1 = getMetanephricCell(cellNum);
+			if (!mCell.equals(cell1)) {
+				dx = mCell.getCoordX() - cell1.getCoordX();;
+				dy = mCell.getCoordY() - cell1.getCoordY();;
+				dxp = coordDiffX(dx, METANEPHRIC_CELL_PERIODIC, didTransform);
+				dyp = coordDiffY(dy, METANEPHRIC_CELL_PERIODIC, didTransform);
+				dist2 = dxp * dxp + dyp * dyp;
+				if (dist2 < compare) {
+					System.out.println("!! DISTANCE " + Math.sqrt(dx * dx + dy * dy) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(mCell) + " " + AllCells[Types.METANEPHRIC.ordinal()].indexOf(cell1));
+					return (cell1);
+				}
+			}
+		}
+		return (cell1);
+	}
 
-    /**  return difference of x coordinates transformed for peridic boundary conditions **/
-    public static double coordDiffX(double x1, double x2, boolean periodic,
-        Boolean didTransform) {
-        return (coordDiffX((x2 - x1), periodic, didTransform));
-    }
+	/**  return difference of x coordinates transformed for peridic boundary conditions **/
+	public static double coordDiffX(double x1, double x2, boolean periodic,
+	Boolean didTransform) {
+		return (coordDiffX((x2 - x1), periodic, didTransform));
+	}
 
-    /**  return difference of x coordinates transformed for peridic boundary conditions overloaded helper function for above **/
-    public static double coordDiffX(double dx, boolean periodic,
-        Boolean didTransform) {
-        didTransform.tf = false;
-        boolean debug = false;
+	/**  return difference of x coordinates transformed for peridic boundary conditions overloaded helper function for above **/
+	public static double coordDiffX(double dx, boolean periodic,
+	Boolean didTransform) {
+		didTransform.tf = false;
+		boolean debug = false;
 
-        if (!periodic) {
-            return (dx);
-        }
+		if (!periodic) {
+			return (dx);
+		}
 
-        double horizontal = CellSimulation.rightLimit - CellSimulation.leftLimit;
-        if (debug) {
-            System.out.println("RIGHT " + CellSimulation.rightLimit);
-            System.out.println("LEFT " + CellSimulation.leftLimit);
-            System.out.println("DX " + dx + " HORIZONTAL " + horizontal);
-        }
+		double horizontal = CellSimulation.rightLimit - CellSimulation.leftLimit;
+		if (debug) {
+			System.out.println("RIGHT " + CellSimulation.rightLimit);
+			System.out.println("LEFT " + CellSimulation.leftLimit);
+			System.out.println("DX " + dx + " HORIZONTAL " + horizontal);
+		}
 
-        if (dx >= (horizontal / 2)) {
-            didTransform.tf = true;
-            return (dx - horizontal);
-        } else if (dx < (-horizontal / 2)) {
-            didTransform.tf = true;
+		if (dx >= (horizontal / 2)) {
+			didTransform.tf = true;
+			return (dx - horizontal);
+		} else if (dx < (-horizontal / 2)) {
+			didTransform.tf = true;
 
-            return (dx + horizontal);
-        } else {
-            return (dx);
-        }
-    }
+			return (dx + horizontal);
+		} else {
+			return (dx);
+		}
+	}
 
-    /**  return difference of y coordinates transformed for peridic boundary conditions **/
-    public static double coordDiffY(double y1, double y2, boolean periodic,
-        Boolean didTransform) {
-        return (coordDiffY((y2 - y1), periodic, didTransform));
-    }
+	/**  return difference of y coordinates transformed for peridic boundary conditions **/
+	public static double coordDiffY(double y1, double y2, boolean periodic,
+	Boolean didTransform) {
+		return (coordDiffY((y2 - y1), periodic, didTransform));
+	}
 
-    /**  return difference of y coordinates transformed for peridic boundary conditions overloaded helper function for above **/
-    public static double coordDiffY(double dy, boolean periodic,
-        Boolean didTransform) {
-        didTransform.tf = false;
+	/**  return difference of y coordinates transformed for peridic boundary conditions overloaded helper function for above **/
+	public static double coordDiffY(double dy, boolean periodic,
+	Boolean didTransform) {
+		didTransform.tf = false;
 
-        if (!periodic) {
-            return (dy);
-        }
+		if (!periodic) {
+			return (dy);
+		}
 
-        double vertical = CellSimulation.upperLimit -
-            CellSimulation.lowerLimit;
+		double vertical = CellSimulation.upperLimit - CellSimulation.lowerLimit;
 
-        if (dy >= (vertical / 2)) {
-            didTransform.tf = true;
+		if (dy >= (vertical / 2)) {
+			didTransform.tf = true;
 
-            return (dy - vertical);
-        } else if (dy <= (-vertical / 2)) {
-            didTransform.tf = true;
-            return (dy + vertical);
-        } else {
-            return (dy);
-        }
-    }
+			return (dy - vertical);
+		} else if (dy <= (-vertical / 2)) {
+			didTransform.tf = true;
+			return (dy + vertical);
+		} else {
+			return (dy);
+		}
+	}
 
-    /**  return difference of z coordinates transformed for peridic boundary conditions **/
-    public static double coordDiffZ(double z1, double z2, boolean periodic,
-        Boolean didTransform) {
-        return (coordDiffY((z2 - z1), periodic, didTransform));
-    }
+	/**  return difference of z coordinates transformed for peridic boundary conditions **/
+	public static double coordDiffZ(double z1, double z2, boolean periodic,
+	Boolean didTransform) {
+		return (coordDiffY((z2 - z1), periodic, didTransform));
+	}
 
-    /**  return difference of z coordinates transformed for peridic boundary conditions overloaded helper function for above **/
-    public static double coordDiffZ(double dz, boolean periodic,
-        Boolean didTransform) {
-        didTransform.tf = false;
+	/**  return difference of z coordinates transformed for peridic boundary conditions overloaded helper function for above **/
+	public static double coordDiffZ(double dz, boolean periodic,
+	Boolean didTransform) {
+		didTransform.tf = false;
 
-        if (!periodic) {
-            return (dz);
-        }
+		if (!periodic) {
+			return (dz);
+		}
 
-        if (dz != 0.) {
-            System.err.println("Error, no PBC for Z coord yet");
-            System.exit(0);
+		if (dz != 0.) {
+			System.err.println("Error, no PBC for Z coord yet");
+			System.exit(0);
 
-            return (dz);
-        } else {
-            return (dz);
-        }
-    }
+			return (dz);
+		} else {
+			return (dz);
+		}
+	}
 
 
-    /** transform coordinates for periodic boundary conditions **/
+	/** transform coordinates for periodic boundary conditions **/
 
-    public static double[] periodicCoords(double[] coords, Boolean didTransform, int cellNumber) {
-        boolean debug = false;
-        didTransform.tf = false;
+	public static double[] periodicCoords(double[] coords, Boolean didTransform, int cellNumber) {
+		boolean debug = false;
+		didTransform.tf = false;
 
-        double[] newCoords = new double[3];
+		double[] newCoords = new double[3];
 
-        for (int i = 0; i < 3; ++i)
-            newCoords[i] = coords[i];
+		for (int i = 0; i < 3; ++i)
+		newCoords[i] = coords[i];
 
-        // if (cellNumber == 18) {
-        //   debug = true;
-        // }
+		// if (cellNumber == 18) {
+		//   debug = true;
+		// }
 
-        if (debug) {
-            System.out.println("PERIODIC COORDS BEFORE " + coords[0] + " " +
-                coords[1] + " " + coords[2]);
-            System.out.println("PERIODIC COORDS Left " + leftLimit);
-            System.out.println("PERIODIC COORDS Right " + rightLimit);
-            System.out.println("PERIODIC COORDS Upper " + upperLimit);
-            System.out.println("PERIODIC COORDS Lower " + lowerLimit);
-        }
+		if (debug) {
+			System.out.println("PERIODIC COORDS BEFORE " + coords[0] + " " + coords[1] + " " + coords[2]);
+			System.out.println("PERIODIC COORDS Left " + leftLimit);
+			System.out.println("PERIODIC COORDS Right " + rightLimit);
+			System.out.println("PERIODIC COORDS Upper " + upperLimit);
+			System.out.println("PERIODIC COORDS Lower " + lowerLimit);
+		}
 
-        if (newCoords[0] >= rightLimit) {
-            newCoords[0] -= (rightLimit - leftLimit);
-            didTransform.tf = true;
-        } else if (newCoords[0] < leftLimit) {
-            newCoords[0] += (rightLimit - leftLimit);
-            didTransform.tf = true;
-        }
+		if (newCoords[0] >= rightLimit) {
+			newCoords[0] -= (rightLimit - leftLimit);
+			didTransform.tf = true;
+		} else if (newCoords[0] < leftLimit) {
+			newCoords[0] += (rightLimit - leftLimit);
+			didTransform.tf = true;
+		}
 
-        if (debug) {
-            System.out.println("PERIODIC COORDS Y " + newCoords[1] + " " +
-                upperLimit);
-        }
+		if (debug) {
+			System.out.println("PERIODIC COORDS Y " + newCoords[1] + " " + upperLimit);
+		}
 
-        if (newCoords[1] >= upperLimit) {
-            if (debug) {
-                System.out.println("PERIODIC COORDS IN HERE");
-            }
+		if (newCoords[1] >= upperLimit) {
+			if (debug) {
+				System.out.println("PERIODIC COORDS IN HERE");
+			}
 
-            newCoords[1] -= (upperLimit - lowerLimit);
-            didTransform.tf = true;
-        } else if (newCoords[1] < lowerLimit) {
-            newCoords[1] += (upperLimit - lowerLimit);
-            didTransform.tf = true;
-        }
+			newCoords[1] -= (upperLimit - lowerLimit);
+			didTransform.tf = true;
+		} else if (newCoords[1] < lowerLimit) {
+			newCoords[1] += (upperLimit - lowerLimit);
+			didTransform.tf = true;
+		}
 
-        if (debug) {
-            System.out.println("PERIODIC COORDS AFTER " + newCoords[0] + " " +
-                newCoords[1] + " " + newCoords[2]);
-        }
+		if (debug) {
+			System.out.println("PERIODIC COORDS AFTER " + newCoords[0] + " " + newCoords[1] + " " + newCoords[2]);
+		}
 
-        return (newCoords);
-    }
+		return (newCoords);
+	}
 
-    /** class that holds distances between cells **/
-    private class DistNo {
-        int i;
-        double dist;
+	/** class that holds distances between cells **/
+	private class DistNo {
+		int i;
+		double dist;
 
-        private DistNo(int no, double d) {
-            i = no;
-            dist = d;
-        }
+		private DistNo(int no, double d) {
+			i = no;
+			dist = d;
+		}
 
-        private void setDist(double d) {
-            dist = d;
-        }
+		private void setDist(double d) {
+			dist = d;
+		}
 
-        private double getDist() {
-            return (dist);
-        }
+		private double getDist() {
+			return (dist);
+		}
 
-        private void setI(int no) {
-            i = no;
-        }
+		private void setI(int no) {
+			i = no;
+		}
 
-        private int getI() {
-            return (i);
-        }
+		private int getI() {
+			return (i);
+		}
 
-        public String toString() {
-            return (i + " " + dist);
-        }
-    }
+		public String toString() {
+			return (i + " " + dist);
+		}
+	}
 
-    /** store a boolean variable **/
-    public class Boolean {
-        public boolean tf;
+	/** store a boolean variable **/
+	public class Boolean {
+		public boolean tf;
 
-        public Boolean(boolean newTf) {
-            tf = newTf;
-        }
-    }
+		public Boolean(boolean newTf) {
+			tf = newTf;
+		}
+	}
 }
